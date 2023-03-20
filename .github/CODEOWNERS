@@ -1,0 +1,9 @@
+# These owners will be the default owners for everything in
+# the repo. Unless a later match takes precedence, they will
+# be requested for review when someone opens a pull request.
+* @uphold/enterprise
+
+# Order is important; the last matching pattern takes the most
+# precedence. Rules are not addictive, meaning people or teams
+# defined above will not be considered codeowners of patterns
+# below unless explicitly added.
