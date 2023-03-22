@@ -1,0 +1,53 @@
+---
+sidebar_position: 1
+---
+
+# Crypto on-ramp
+
+The crypto on-ramp flow allows a user to add funds from a credit or debit card to their crypto wallet.
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs>
+  <TabItem label="Schema" value="schema" default>
+
+- `source`: An object configuring the asset and amount to be paid.
+  - `amount` (_optional_): The amount to be paid.
+  - `asset`: The [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) currency code used to make payment (for example "USD").
+- `target`: An object configuring recipient wallet.
+  - `address`: Recipient wallet address.
+  - `amount` (_optional_): Amount of the receiving asset to be purchased.
+  - `asset`: Cryptoasset to be received.
+  - `network`: Network of the receiving asset.
+  - `label` (_optional_): Label for the recipient to be shown in the Topper UI.
+
+:::note
+At least one of `source.amount` or `target.amount` _must_ be provided, but not both.
+:::
+
+  </TabItem>
+  <TabItem label="Example" value="example">
+
+```json
+{
+  "iat": 1679538023,
+  "jti": "4b552af1-1592-42f8-bbc9-dac28e2b4000",
+  "sub": "b9fe022b-f436-49e1-bb89-6f2e8eabf336",
+  // highlight-start
+  "source": {
+    "amount": "100.00",
+    "asset": "USD"
+  },
+  "target": {
+    "address": "0xb794f5ea0ba39494ce839613fffba74279579268",
+    "asset": "ETH",
+    "network": "ethereum",
+    "label": "My wallet"
+  }
+  // highlight-end
+}
+```
+
+  </TabItem>
+</Tabs>

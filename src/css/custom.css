@@ -4,27 +4,74 @@
  * work well for content-centric websites.
  */
 
+ /* Open Sauce font */
+ /* See: https://github.com/facebookincubator/infima/blob/91e75f78b286b51e4d451a2bcb6cc51d73b437cb/packages/core/styles/common/variables.pcss#L122 */
+ @font-face {
+  font-family: 'Open Sauce Sans';
+  src: url('/fonts/OpenSauceSans-Light.woff2') format('woff2');
+  font-weight: 300;
+ }
+
+ @font-face {
+  font-family: 'Open Sauce Sans';
+  src: url('/fonts/OpenSauceSans-LightItalic.woff2') format('woff2');
+  font-weight: 300;
+  font-style: italic;
+ }
+
+ @font-face {
+  font-family: 'Open Sauce Sans';
+  src: url('/fonts/OpenSauceSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+ }
+
+ @font-face {
+  font-family: 'Open Sauce Sans';
+  src: url('/fonts/OpenSauceSans-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+ }
+
+ @font-face {
+  font-family: 'Open Sauce Sans';
+  src: url('/fonts/OpenSauceSans-SemiBold.woff2') format('woff2');
+  font-weight: 500;
+ }
+
+ @font-face {
+  font-family: 'Open Sauce Sans';
+  src: url('/fonts/OpenSauceSans-SemiBoldItalic.woff2') format('woff2');
+  font-weight: 500;
+  font-style: italic;
+ }
+
+ @font-face {
+  font-family: 'Open Sauce Sans';
+  src: url('/fonts/OpenSauceSans-Bold.woff2') format('woff2');
+  font-weight: 700;
+ }
+
+ @font-face {
+  font-family: 'Open Sauce Sans';
+  src: url('/fonts/OpenSauceSans-BoldItalic.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+ }
+
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #689250;
-  --ifm-color-primary-dark: #577a43;
-  --ifm-color-primary-darker: #456235;
-  --ifm-color-primary-darkest: #344928;
-  --ifm-color-primary-light: #79ab5d;
-  --ifm-color-primary-lighter: #8ac36a;
-  --ifm-color-primary-lightest: #9cdc78;
-  --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --ifm-color-primary: #72b44c;
+  --ifm-font-color-content: #23322b;
+  --ifm-background-color: #f6f8f4;
+  --ifm-navbar-background-color: #f6f8f4;
+  --ifm-font-family-base: 'Open Sauce Sans';
+  --docusaurus-highlighted-code-line-bg: #eeeeee;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
-  --ifm-color-primary: #c6f7aa;
-  --ifm-color-primary-dark: #bdf69d;
-  --ifm-color-primary-darker: #b5f591;
-  --ifm-color-primary-darkest: #adf485;
-  --ifm-color-primary-light: #cef8b6;
-  --ifm-color-primary-lighter: #d6fac2;
-  --ifm-color-primary-lightest: #defbce;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --ifm-color-primary: #90dc66;
+  --ifm-color-content: #e3e3e3;
+  --ifm-navbar-background-color: #242526;
+  --docusaurus-highlighted-code-line-bg: #646464;
 }
