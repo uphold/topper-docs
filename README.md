@@ -1,6 +1,6 @@
-# Docusaurus
+# topper-docs
 
-This documentation website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
+Public developer documentation for business users integrating with topper, built using [Docusaurus](https://docusaurus.io/).
 
 ## Running locally
 

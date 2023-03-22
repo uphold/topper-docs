@@ -10,15 +10,11 @@ const config = {
   },
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
-
-  organizationName: 'uphold',
-
   presets: [
     [
       'classic',
       {
         docs: {
-          editUrl: 'https://github.com/uphold/topper-backend/projects/docusaurus/',
           routeBasePath: '/'
         },
         theme: {
@@ -27,35 +23,22 @@ const config = {
       }
     ]
   ],
-
-  projectName: 'topper-backend.github.io',
-
-  tagline: 'Topper backend internal documentation',
-
+  tagline: 'Technical documentation on how to integrate with Topper',
   themeConfig: {
     navbar: {
-      items: [
-        {
-          href: 'https://github.com/uphold/topper-backend',
-          label: 'GitHub',
-          position: 'right'
-        }
-      ],
       logo: {
         alt: 'Logo',
-        src: 'images/logo.svg'
-      },
-      title: 'Topper Backend'
+        src: 'images/logo-light.svg',
+        srcDark: 'images/logo-dark.svg'
+      }
     },
     prism: {
       darkTheme: darkCodeTheme,
       theme: lightCodeTheme
     }
   },
-
-  title: 'Topper Backend',
-
-  url: 'https://your-docusaurus-test-site.com'
+  title: 'Topper - Developer docs',
+  url: 'https://docs.topperpay.com'
 };
 
 module.exports = config;
