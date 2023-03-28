@@ -65,7 +65,7 @@
   --ifm-background-color: #f6f8f4;
   --ifm-navbar-background-color: #f6f8f4;
   --ifm-font-family-base: 'Open Sauce Sans';
-  --docusaurus-highlighted-code-line-bg: #eeeeee;
+  --docusaurus-highlighted-code-line-bg: #eef2eb;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -73,5 +73,5 @@
   --ifm-color-primary: #90dc66;
   --ifm-color-content: #e3e3e3;
   --ifm-navbar-background-color: #242526;
-  --docusaurus-highlighted-code-line-bg: #646464;
+  --docusaurus-highlighted-code-line-bg: #394737;
 }

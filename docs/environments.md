@@ -14,15 +14,19 @@ The following card details can be used to force specific outcomes:
 
 | Card number      | Outcome                 |
 |------------------|-------------------------|
-| 4485040371536584 | `success`               |
+| 4539628347117863 | `success`               |
 | 4312810406702461 | `card_unauthorized`     |
-| 4821276111223694 | `card_declined_by_bank` |
-| 4648778096000816 | `request_data_invalid`  |
-| 4695070264707089 | `card_expired`          |
-| 4472010538259482 | `card_unsupported`      |
-| 4247318851058116 | `insufficient_funds`    |
+| 4414745735532923 | `card_declined_by_bank` |
+| 4916426384864999 | `request_data_invalid`  |
+| 4086439018748730 | `card_expired`          |
+| 4532942248840268 | `card_unsupported`      |
+| 4929216735379028 | `insufficient_funds`    |
 | 4748972091871094 | `amount_invalid`        |
-| 4467625019643180 | `velocity`              |
+| 4916526184701927 | `velocity`              |
+
+:::note
+When using the above card numbers, Topper will accept any value for the expiry date and CVV.
+:::
 
 ## Production
 
