@@ -1,6 +1,7 @@
 name: Deploy
 
 on:
+  pull_request:
   push:
     branches:
     - master
@@ -8,6 +9,11 @@ on:
 jobs:
   build:
     runs-on: [self-hosted, linux, infrastructure-production-toolbox]
+    permissions:
+      contents: read
+      deployments: write
+      pull-requests: write
+
     steps:
 
     - name: Checkout code
@@ -26,10 +32,22 @@ jobs:
       run: npm run build
 
     - name: Publish to Cloudflare Pages
+      id: cloudflare
       uses: cloudflare/pages-action@v1
       with:
         apiToken: ${{ secrets.CLOUDFLARE_PAGES_API_TOKEN }}
         accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         projectName: topper-docs
         directory: build
-        branch: master
+
+    - name: Add comment
+      uses: mshick/add-pr-comment@v2
+      with:
+        message: |
+          <span aria-hidden="true">🚀</span> Preview has been deployed.
+
+          |  Name | Link |
+          |---------------------------------|------------------------|
+          |<span aria-hidden="true">🔨</span> Commit SHA | ${{ github.sha }} |
+          |<span aria-hidden="true">🔍</span> Deploy log | ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} |
+          |<span aria-hidden="true">🚀</span> Preview URL | [${{ steps.cloudflare.outputs.url }}](${{ steps.cloudflare.outputs.url }}) |
