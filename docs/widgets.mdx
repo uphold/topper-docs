@@ -35,7 +35,7 @@ import TabItem from '@theme/TabItem';
 Here is a quick Node.js snippet to generate an ES256 key pair in Topper's preferred JWK format:
 
 ```js
-import { generateKeyPairSync } from 'node:crypto';
+const { generateKeyPairSync } = require('crypto');
 
 // Generate a key pair
 const { privateKey, publicKey } = generateKeyPairSync('ec', { namedCurve: 'prime256v1' });
@@ -104,9 +104,9 @@ The _payload_ should also contain configuration specific to the widget for which
 Here is a Node.js snippet to generate a **bootstrap token** for the [crypto on-ramp](./flows/crypto_onramp.mdx) flow using the [`jsonwebtoken`](https://github.com/auth0/node-jsonwebtoken) package:
 
 ```js
-import { createPrivateKey, randomUUID } from 'node:crypto';
-import { promisify } from 'node:util';
-import jsonwebtoken from 'jsonwebtoken';
+const { createPrivateKey, randomUUID } = require('crypto');
+const { promisify } = require('util');
+const jsonwebtoken = require('jsonwebtoken');
 
 // Load private key in JWK format from an environment variable.
 const privateKeyJwk = JSON.parse(process.env.MY_SIGNING_PRIVATE_KEY);
@@ -151,8 +151,21 @@ console.log(await sign(payload, privateKey, options));
 
 After a **bootstrap token** has been generated, a Topper session can be started by opening a browser window for the end user at the [Topper app URL](./environments.md). The **bootstrap token** should be added to the `bt` parameter of the query string.
 
+<Tabs>
+  <TabItem label="Sandbox" value="sandbox" default>
+
+```
+https://app.sandbox.topperpay.com/?bt=<bootstrap token>
+```
+
+  </TabItem>
+  <TabItem label="Production" value="production" default>
+
 ```
 https://app.topperpay.com/?bt=<bootstrap token>
 ```
+
+  </TabItem>
+</Tabs>
 
 In order to prevent social and replay attacks, a **bootstrap token** will only be valid for 60 seconds after its issue time (from the `iat` claim). A **bootstrap token** may only be used to create a session one time, any subsequent attempts to create a session with the same token will be rejected.
