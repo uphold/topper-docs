@@ -6,7 +6,8 @@ sidebar_position: 4
 
 ## Sandbox
 
-Topper app URL: `https://app.sandbox.topperpay.com/`
+- Topper App URL: `https://app.sandbox.topperpay.com/`
+- Topper REST URL: `https://api.sandbox.topperpay.com/`
 
 Topper's sandbox is an environment that simulates the live Topper production environment. The sandbox environment provides a space where you can test your integration with Topper without touching any live accounts, and without using any real funds.
 
@@ -30,6 +31,7 @@ When using the above card numbers, Topper will accept any value for the expiry d
 
 ## Production
 
-Topper app URL: `https://app.topperpay.com/`
+- Topper App URL: `https://app.topperpay.com/`
+- Topper REST URL: `https://api.topperpay.com/`
 
 After successfully onboarding and testing your integration in our sandbox environment, you can start Topper sessions for your end users using the production environment.
