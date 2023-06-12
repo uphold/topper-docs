@@ -6,6 +6,8 @@ sidebar_position: 1
 
 The crypto on-ramp flow allows a user to add funds from a credit or debit card to a crypto address.
 
+## Bootstrap token payload
+
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
@@ -46,6 +48,248 @@ At least one of `source.amount` or `target.amount` _must_ be provided, but not b
     "label": "My wallet"
   }
   // highlight-end
+}
+```
+
+  </TabItem>
+</Tabs>
+
+## Events
+
+### `order:crypto-onramp:charged`
+
+Triggered when a user has been charged.
+
+<Tabs>
+  <TabItem label="Schema" value="schema" default>
+
+- `status`: Status of the order (`processing`).
+- `createdAt`: Timestamp at which the order was created.
+- `updatedAt`: Timestamp at which the order was last updated.
+- `origin`: Object containing information about how the user paid.
+  - `amount`: Amount the user paid.
+  - `asset`: The [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) currency code used to make payment (for example "USD").
+  - `rate`: Rate used to calculate the amount.
+- `destination`: Object containing information about what the user will receive.
+  - `address`: Recipient wallet address.
+  - `amount`: Amount the user will receive.
+  - `asset`: Cryptoasset the user will receive.
+  - `network`: Network of the receiving asset.
+  - `rate`: Rate used to calculate the amount.
+- `fees`: Array containing fees associated with the order.
+  - `amount`: Amount user was charged for this fee.
+  - `asset`: Asset used to charge the fee.
+  - `type`: Type of fee (`network` or `deposit`).
+- `widget`: Widget associated with the session.
+  - `id` UUID of the widget.
+  - `name`: Name of the widget.
+  - `flow`: Flow associated with the widget.
+
+
+  </TabItem>
+  <TabItem label="Example" value="example">
+
+```json
+{
+  "name": "order:crypto-onramp:charged",
+  "id": "00a991cf-a870-43af-88b8-43c51532831d",
+  "bootstrapTokenId": "141bfa06-481e-4684-96eb-cec4ad529616",
+  "data": {
+    // highlight-start
+    "status": "processing",
+    "createdAt": "2023-06-12T17:21:21.240Z",
+    "updatedAt": "2023-06-12T17:21:21.240Z",
+    "origin": {
+      "amount": "100.00",
+      "asset": "USD",
+      "rate": "1770.27534301775263314892"
+    },
+    "destination": {
+      "address": "0xb794F5eA0ba39494cE839613fffBA74279579268",
+      "amount": "0.047116964221968237",
+      "asset": "ETH",
+      "network": "ethereum",
+      "rate": "0.00056488387749632223"
+    },
+    "fees": [
+      {
+        "amount": "14.17",
+        "asset": "USD",
+        "type": "network"
+      },
+      {
+        "amount": "2.42",
+        "asset": "USD",
+        "type": "deposit"
+      }
+    ],
+    "widget": {
+      "id": "998544f2-5b01-4062-9394-22827ff5db6c",
+      "name": "ACME",
+      "flow": "crypto_onramp"
+    }
+    // highlight-end
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+### `order:crypto-onramp:completed`
+
+Triggered when a user's order has completed.
+
+<Tabs>
+  <TabItem label="Schema" value="schema" default>
+
+- `status`: Status of the order (`completed`).
+- `createdAt`: Timestamp at which the order was created.
+- `updatedAt`: Timestamp at which the order was last updated.
+- `origin`: Object containing information about how the user paid.
+  - `amount`: Amount the user paid.
+  - `asset`: The [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) currency code used to make payment (for example "USD").
+  - `rate`: Rate used to calculate the amount.
+- `destination`: Object containing information about what the user will receive.
+  - `address`: Recipient wallet address.
+  - `amount`: Amount the user will receive.
+  - `asset`: Cryptoasset the user will receive.
+  - `network`: Network of the receiving asset.
+  - `rate`: Rate used to calculate the amount.
+- `fees`: Array containing fees associated with the order.
+  - `amount`: Amount user was charged for this fee.
+  - `asset`: Asset used to charge the fee.
+  - `type`: Type of fee (`network` or `deposit`).
+- `widget`: Widget associated with the session.
+  - `id` UUID of the widget.
+  - `name`: Name of the widget.
+  - `flow`: Flow associated with the widget.
+
+
+  </TabItem>
+  <TabItem label="Example" value="example">
+
+```json
+{
+  "name": "order:crypto-onramp:completed",
+  "id": "00a991cf-a870-43af-88b8-43c51532831d",
+  "bootstrapTokenId": "141bfa06-481e-4684-96eb-cec4ad529616",
+  "data": {
+    // highlight-start
+    "status": "completed",
+    "createdAt": "2023-06-12T17:21:21.240Z",
+    "updatedAt": "2023-06-12T17:21:21.240Z",
+    "origin": {
+      "amount": "100.00",
+      "asset": "USD",
+      "rate": "1770.27534301775263314892"
+    },
+    "destination": {
+      "address": "0xb794F5eA0ba39494cE839613fffBA74279579268",
+      "amount": "0.047116964221968237",
+      "asset": "ETH",
+      "network": "ethereum",
+      "rate": "0.00056488387749632223"
+    },
+    "fees": [
+      {
+        "amount": "14.17",
+        "asset": "USD",
+        "type": "network"
+      },
+      {
+        "amount": "2.42",
+        "asset": "USD",
+        "type": "deposit"
+      }
+    ],
+    "widget": {
+      "id": "998544f2-5b01-4062-9394-22827ff5db6c",
+      "name": "ACME",
+      "flow": "crypto_onramp"
+    }
+    // highlight-end
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+### `order:crypto-onramp:failed`
+
+Triggered when a user's order has failed.
+
+<Tabs>
+  <TabItem label="Schema" value="schema" default>
+
+- `status`: Status of the order (`failed`).
+- `createdAt`: Timestamp at which the order was created.
+- `updatedAt`: Timestamp at which the order was last updated.
+- `origin`: Object containing information about how the user paid.
+  - `amount`: Amount the user paid.
+  - `asset`: The [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) currency code used to make payment (for example "USD").
+  - `rate`: Rate used to calculate the amount.
+- `destination`: Object containing information about what the user will receive.
+  - `address`: Recipient wallet address.
+  - `amount`: Amount the user will receive.
+  - `asset`: Cryptoasset the user will receive.
+  - `network`: Network of the receiving asset.
+  - `rate`: Rate used to calculate the amount.
+- `fees`: Array containing fees associated with the order.
+  - `amount`: Amount user was charged for this fee.
+  - `asset`: Asset used to charge the fee.
+  - `type`: Type of fee (`network` or `deposit`).
+- `widget`: Widget associated with the session.
+  - `id` UUID of the widget.
+  - `name`: Name of the widget.
+  - `flow`: Flow associated with the widget.
+
+
+  </TabItem>
+  <TabItem label="Example" value="example">
+
+```json
+{
+  "name": "order:crypto-onramp:failed",
+  "id": "00a991cf-a870-43af-88b8-43c51532831d",
+  "bootstrapTokenId": "141bfa06-481e-4684-96eb-cec4ad529616",
+  "data": {
+    // highlight-start
+    "status": "failed",
+    "createdAt": "2023-06-12T17:21:21.240Z",
+    "updatedAt": "2023-06-12T17:21:21.240Z",
+    "origin": {
+      "amount": "100.00",
+      "asset": "USD",
+      "rate": "1770.27534301775263314892"
+    },
+    "destination": {
+      "address": "0xb794F5eA0ba39494cE839613fffBA74279579268",
+      "amount": "0.047116964221968237",
+      "asset": "ETH",
+      "network": "ethereum",
+      "rate": "0.00056488387749632223"
+    },
+    "fees": [
+      {
+        "amount": "14.17",
+        "asset": "USD",
+        "type": "network"
+      },
+      {
+        "amount": "2.42",
+        "asset": "USD",
+        "type": "deposit"
+      }
+    ],
+    "widget": {
+      "id": "998544f2-5b01-4062-9394-22827ff5db6c",
+      "name": "ACME",
+      "flow": "crypto_onramp"
+    }
+    // highlight-end
+  }
 }
 ```
 

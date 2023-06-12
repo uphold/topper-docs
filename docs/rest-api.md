@@ -15,6 +15,6 @@ Topper offers a REST API you can use to:
 
 ## OpenAPI documentation
 
-To make it easier to consume the REST API, there's an [OpenAPI](https://www.openapis.org/) specification available in https://api.topperpay.com/docs/json.
+To make it easier to consume the REST API, there's an [OpenAPI specification](https://www.openapis.org/) available at https://api.topperpay.com/docs/json.
 
-You may also visualize the documentation in https://api.topperpay.com/docs.
+You may also visualize the documentation at https://api.topperpay.com/docs.
