@@ -1,5 +1,5 @@
 ---
-sidebar_position: 6
+sidebar_position: 5
 ---
 
 # Webhooks
@@ -16,6 +16,16 @@ A webhook request will include the following data:
 - `id`: UUID of the event which will persist across retries, can be used as an idempotency key.
 - `bootstrapTokenId`: The `jti` claim of the bootstrap token used to initiate the session.
 - `data`: Payload of the event.
+
+## Events
+
+Full information about the available events and their associated payloads can be found on the associated **Flows** page.
+
+| Flow | Event | Trigger |
+| - | - | - |
+| [crypto_onramp](./flows/crypto-onramp) | [`order:crypto-onramp:charged`](./flows/crypto-onramp#ordercrypto-onrampcharged) | User has been charged for their order. |
+| [crypto_onramp](./flows/crypto-onramp) | [`order:crypto-onramp:completed`](./flows/crypto-onramp#ordercrypto-onrampcompleted) | User's order has completed. |
+| [crypto_onramp](./flows/crypto-onramp) | [`order:crypto-onramp:failed`](./flows/crypto-onramp#ordercrypto-onrampfailed) | User's order has failed. |
 
 ## Verifying a request
 
