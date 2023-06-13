@@ -1,8 +1,8 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 ---
 
-# Events
+# Browser events
 
 If the Topper browser session is opened using JavaScript — for example by using `window.open()` — then you can receive updates on the user's session by using the [`postMessage` API](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage).
 

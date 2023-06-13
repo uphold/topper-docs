@@ -63,6 +63,7 @@ Triggered when a user has been charged.
 <Tabs>
   <TabItem label="Schema" value="schema" default>
 
+- `id`: UUID of the order.
 - `status`: Status of the order (`processing`).
 - `createdAt`: Timestamp at which the order was created.
 - `updatedAt`: Timestamp at which the order was last updated.
@@ -96,6 +97,7 @@ Triggered when a user has been charged.
   "bootstrapTokenId": "141bfa06-481e-4684-96eb-cec4ad529616",
   "data": {
     // highlight-start
+    "id": "966b8e24-6a65-442a-942e-577f16288789",
     "status": "processing",
     "createdAt": "2023-06-12T17:21:21.240Z",
     "updatedAt": "2023-06-12T17:21:21.240Z",
@@ -143,6 +145,7 @@ Triggered when a user's order has completed.
 <Tabs>
   <TabItem label="Schema" value="schema" default>
 
+- `id`: UUID of the order.
 - `status`: Status of the order (`completed`).
 - `createdAt`: Timestamp at which the order was created.
 - `updatedAt`: Timestamp at which the order was last updated.
@@ -176,6 +179,7 @@ Triggered when a user's order has completed.
   "bootstrapTokenId": "141bfa06-481e-4684-96eb-cec4ad529616",
   "data": {
     // highlight-start
+    "id": "966b8e24-6a65-442a-942e-577f16288789",
     "status": "completed",
     "createdAt": "2023-06-12T17:21:21.240Z",
     "updatedAt": "2023-06-12T17:21:21.240Z",
@@ -223,6 +227,7 @@ Triggered when a user's order has failed.
 <Tabs>
   <TabItem label="Schema" value="schema" default>
 
+- `id`: UUID of the order.
 - `status`: Status of the order (`failed`).
 - `createdAt`: Timestamp at which the order was created.
 - `updatedAt`: Timestamp at which the order was last updated.
@@ -256,6 +261,7 @@ Triggered when a user's order has failed.
   "bootstrapTokenId": "141bfa06-481e-4684-96eb-cec4ad529616",
   "data": {
     // highlight-start
+    "id": "966b8e24-6a65-442a-942e-577f16288789",
     "status": "failed",
     "createdAt": "2023-06-12T17:21:21.240Z",
     "updatedAt": "2023-06-12T17:21:21.240Z",
