@@ -92,7 +92,7 @@ The _header_ of the **bootstrap token** must contain the following data:
 The _payload_ of the **bootstrap token** must contain the following claims:
 
 - `iat` The timestamp the token was issued (number of _seconds_ since the Unix epoch).
-- `jti`: A unique UUID for the session which will be used for updates in events or webhooks.
+- `jti`: A unique ID for the session which will be used for updates in events or webhooks.
 - `sub`: The **widget id** of the widget.
 
 The _payload_ should also contain configuration specific to the widget for which the session is being created.
