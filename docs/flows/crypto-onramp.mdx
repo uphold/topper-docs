@@ -15,17 +15,24 @@ import TabItem from '@theme/TabItem';
   <TabItem label="Schema" value="schema" default>
 
 - `source`: An object configuring the asset and amount to be paid.
-  - `amount` (_optional_): The amount to be paid.
-  - `asset`: The [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) currency code used to make payment (for example "USD").
+  - `amount` (_optional_): Amount to be paid.
+  - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to make the payment.
 - `target`: An object configuring recipient wallet.
-  - `address`: Recipient wallet address.
-  - `amount` (_optional_): Amount of the receiving asset to be purchased.
-  - `asset`: Cryptoasset to be received.
+  - `amount`: Amount the user will receive.
+  - `asset`: Cryptoasset the user will receive.
   - `network`: Network of the receiving asset.
-  - `label` (_optional_): Label for the recipient to be shown in the Topper UI.
+  - `address`: Recipient wallet address.
+  - `priority` (_optional_): Priority of the crypto transaction (e.g.: `fast` will enable instant send for `Dash` transactions)
+  - `tag` (_optional_): Tag of the crypto transaction, used to completement the `address`.
+    - `type`: Tag type (e.g.: `memo` or `destination-tag`).
+    - `value`: Tag value.
 
 :::note
-At least one of `source.amount` or `target.amount` _must_ be provided, but not both. Assets for `source` and `target` that are available for this flow can be found using our [REST API](../rest-api.md), via the [assets endpoint](https://api.topperpay.com/assets/crypto-onramp).
+At least one of `source.amount` or `target.amount` _must_ be provided, but not both.
+
+The supported values for `source.asset`, `target.asset`, `target.network`, `target.tag` and `target.priority` can be found using our [REST API](../rest-api.md), via the [assets endpoint](https://api.topperpay.com/assets/crypto-onramp).
+
+Please note that the allowed tag types and priorities depend on the network.
 :::
 
   </TabItem>
@@ -69,14 +76,18 @@ Triggered when a user has been charged.
 - `updatedAt`: Timestamp at which the order was last updated.
 - `origin`: Object containing information about how the user paid.
   - `amount`: Amount the user paid.
-  - `asset`: The [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) currency code used to make payment (for example "USD").
+  - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to make the payment.
   - `rate`: Rate used to calculate the amount.
 - `destination`: Object containing information about what the user will receive.
-  - `address`: Recipient wallet address.
   - `amount`: Amount the user will receive.
   - `asset`: Cryptoasset the user will receive.
-  - `network`: Network of the receiving asset.
   - `rate`: Rate used to calculate the amount.
+  - `network`: Network of the receiving asset.
+  - `address`: Recipient wallet address.
+  - `priority` (_optional_): Priority of the crypto transaction (e.g.: `fast` will enable instant send for `Dash` transactions)
+  - `tag` (_optional_): Tag of the crypto transaction, used to completement the `address`.
+    - `type`: Tag type (e.g.: `memo` or `destination-tag`).
+    - `value`: Tag value.
 - `fees`: Array containing fees associated with the order.
   - `amount`: Amount user was charged for this fee.
   - `asset`: Asset used to charge the fee.
@@ -151,14 +162,18 @@ Triggered when a user's order has completed.
 - `updatedAt`: Timestamp at which the order was last updated.
 - `origin`: Object containing information about how the user paid.
   - `amount`: Amount the user paid.
-  - `asset`: The [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) currency code used to make payment (for example "USD").
+  - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to make the payment.
   - `rate`: Rate used to calculate the amount.
-- `destination`: Object containing information about what the user will receive.
-  - `address`: Recipient wallet address.
-  - `amount`: Amount the user will receive.
-  - `asset`: Cryptoasset the user will receive.
+- `destination`: Object containing information about what the user received.
+  - `amount`: Amount the user received.
+  - `asset`: Cryptoasset the user received.
+  - `rate`: Rate used to calculate the amount.
   - `network`: Network of the receiving asset.
-  - `rate`: Rate used to calculate the amount.
+  - `address`: Recipient wallet address.
+  - `priority` (_optional_): Priority of the crypto transaction (e.g.: `fast` will enable instant send for `Dash` transactions)
+  - `tag` (_optional_): Tag of the crypto transaction, used to completement the `address`.
+    - `type`: Tag type (e.g.: `memo` or `destination-tag`).
+    - `value`: Tag value.
 - `fees`: Array containing fees associated with the order.
   - `amount`: Amount user was charged for this fee.
   - `asset`: Asset used to charge the fee.
@@ -233,14 +248,18 @@ Triggered when a user's order has failed.
 - `updatedAt`: Timestamp at which the order was last updated.
 - `origin`: Object containing information about how the user paid.
   - `amount`: Amount the user paid.
-  - `asset`: The [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) currency code used to make payment (for example "USD").
+  - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to make the payment.
   - `rate`: Rate used to calculate the amount.
-- `destination`: Object containing information about what the user will receive.
-  - `address`: Recipient wallet address.
-  - `amount`: Amount the user will receive.
-  - `asset`: Cryptoasset the user will receive.
+- `destination`: Object containing information about what the user would have received.
+  - `amount`: Amount the user would have received.
+  - `asset`: Cryptoasset the user would have received.
+  - `rate`: Rate used to calculate the amount.
   - `network`: Network of the receiving asset.
-  - `rate`: Rate used to calculate the amount.
+  - `address`: Recipient wallet address.
+  - `priority` (_optional_): Priority of the crypto transaction (e.g.: `fast` will enable instant send for `Dash` transactions)
+  - `tag` (_optional_): Tag of the crypto transaction, used to completement the `address`.
+    - `type`: Tag type (e.g.: `memo` or `destination-tag`).
+    - `value`: Tag value.
 - `fees`: Array containing fees associated with the order.
   - `amount`: Amount user was charged for this fee.
   - `asset`: Asset used to charge the fee.
