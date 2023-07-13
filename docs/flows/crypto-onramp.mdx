@@ -2,37 +2,42 @@
 sidebar_position: 1
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+
 # Crypto on-ramp
 
 The crypto on-ramp flow allows a user to add funds from a credit or debit card to a crypto address.
 
 ## Bootstrap token payload
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 <Tabs>
   <TabItem label="Schema" value="schema" default>
 
-- `source`: An object configuring the asset and amount to be paid.
+- `source` (_optional_): An object configuring the asset and amount to be paid.
   - `amount` (_optional_): Amount to be paid.
   - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to make the payment.
-- `target`: An object configuring recipient wallet.
-  - `amount`: Amount the user will receive.
+- `target` (_optional_): An object configuring recipient wallet.
+  - `amount` (_optional_): Amount the user will receive.
   - `asset`: Cryptoasset the user will receive.
   - `network`: Network of the receiving asset.
   - `address`: Recipient wallet address.
-  - `priority` (_optional_): Priority of the crypto transaction (e.g.: `fast` will enable instant send for `Dash` transactions)
   - `tag` (_optional_): Tag of the crypto transaction, used to complement the `address`.
     - `type`: Tag type (e.g.: `memo` or `destination-tag`).
     - `value`: Tag value.
+  - `priority` (_optional_): Priority of the crypto transaction (e.g.: `fast` will enable instant send for `Dash` transactions). Defaults to `normal`.
+  - `recipientEditMode` (_optional_): Controls if the user can change `asset`, `network`, `address` and `tag` on the widget. Defaults to `not-editable`.
 
 :::note
 At least one of `source.amount` or `target.amount` _must_ be provided, but not both.
 
 The supported values for `source.asset`, `target.asset`, `target.network`, `target.tag` and `target.priority` can be found using our [REST API](../rest-api.md), via the [assets endpoint](https://api.topperpay.com/assets/crypto-onramp).
+:::
 
-Please note that the allowed tag types and priorities depend on the network.
+:::caution
+In the `sandbox` environment, Topper has limited funds on testnets. If you make an order using an asset we have no funds for, the order will be stuck indefinitely trying to create the blockchain transaction.
+We recommend that you use `XRP` for testing purposes when integrating Topper since we have a larger quantity of them. If you prefer to test with another asset and network, please reach out to us beforehand so that we can guarantee funds on our pool and give you a smoother integration experience.
 :::
 
   </TabItem>
@@ -44,15 +49,76 @@ Please note that the allowed tag types and priorities depend on the network.
   "jti": "4b552af1-1592-42f8-bbc9-dac28e2b4000",
   "sub": "b9fe022b-f436-49e1-bb89-6f2e8eabf336",
   // highlight-start
-  "source": {
-    "amount": "100.00",
-    "asset": "USD"
-  },
   "target": {
-    "address": "0xb794f5ea0ba39494ce839613fffba74279579268",
     "asset": "ETH",
     "network": "ethereum",
+    "address": "0xb794f5ea0ba39494ce839613fffba74279579268",
     "label": "My wallet"
+  }
+  // highlight-end
+}
+```
+
+  </TabItem>
+</Tabs>
+
+### Recipient edit mode
+
+<Tabs>
+  <TabItem label="Not editable" value="not-editable" default>
+
+When `recipientEditMode` is `not-editable`, the user can can't change `asset`, `network`, `address` or `tag` on the widget. This means that these fields are all required on the bootstrap token.
+
+```json
+{
+  "iat": 1679538023,
+  "jti": "4b552af1-1592-42f8-bbc9-dac28e2b4000",
+  "sub": "b9fe022b-f436-49e1-bb89-6f2e8eabf336",
+  // highlight-start
+  "target": {
+    "asset": "ETH",
+    "network": "ethereum",
+    "address": "0xb794f5ea0ba39494ce839613fffba74279579268",
+    "label": "My wallet",
+    "recipientEditMode": "not-editable"
+  }
+  // highlight-end
+}
+```
+
+  </TabItem>
+  <TabItem label="Only address and tag" value="only-address-and-tag" default>
+
+When `recipientEditMode` is `address-and-tag`, the user can only change `address` and `tag` on the widget. This means that these fields are optional on the bootstrap token but you can still provide values for them. On the other hand, `asset` and `network` become mandatory.
+
+```json
+{
+  "iat": 1679538023,
+  "jti": "4b552af1-1592-42f8-bbc9-dac28e2b4000",
+  "sub": "b9fe022b-f436-49e1-bb89-6f2e8eabf336",
+  // highlight-start
+  "target": {
+    "asset": "ETH",
+    "network": "ethereum",
+    "recipientEditMode": "only-address-and-tag"
+  }
+  // highlight-end
+}
+```
+
+  </TabItem>
+  <TabItem label="All editable" value="all-editable" default>
+
+When `recipientEditMode` is `all-editable`, the user can change `asset`, `network`, `address` and `tag` on the widget. This means that all these fields are optional on the bootstrap token but you can still provide values for them.
+
+```json
+{
+  "iat": 1679538023,
+  "jti": "4b552af1-1592-42f8-bbc9-dac28e2b4000",
+  "sub": "b9fe022b-f436-49e1-bb89-6f2e8eabf336",
+  // highlight-start
+  "target": {
+    "recipientEditMode": "all-editable"
   }
   // highlight-end
 }
@@ -76,20 +142,20 @@ Triggered when a user has been charged.
 - `updatedAt`: Timestamp at which the order was last updated.
 - `origin`: Object containing information about how the user paid.
   - `amount`: Amount the user paid.
+  - `rate`: Rate used to calculate the amount.
   - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to make the payment.
   - `paymentMethod`: Object containing information about the payment method used.
     - `type`: Type of payment method.
-  - `rate`: Rate used to calculate the amount.
 - `destination`: Object containing information about what the user will receive.
   - `amount`: Amount the user will receive.
-  - `asset`: Cryptoasset the user will receive.
   - `rate`: Rate used to calculate the amount.
+  - `asset`: Cryptoasset the user will receive.
   - `network`: Network of the receiving asset.
   - `address`: Recipient wallet address.
-  - `priority` (_optional_): Priority of the crypto transaction (e.g.: `fast` will enable instant send for `Dash` transactions)
   - `tag` (_optional_): Tag of the crypto transaction, used to complement the `address`.
     - `type`: Tag type (e.g.: `memo` or `destination-tag`).
     - `value`: Tag value.
+  - `priority` (_optional_): Priority of the crypto transaction.
 - `fees`: Array containing fees associated with the order.
   - `amount`: Amount user was charged for this fee.
   - `asset`: Asset used to charge the fee.
@@ -100,7 +166,7 @@ Triggered when a user has been charged.
   - `flow`: Flow associated with the widget.
 
 :::note
-The values for `origin.paymentMethod.type`, can be found using our [REST API](../rest-api.md), via the [payment methods endpoint](https://api.topperpay.com/payment-methods/crypto-onramp).
+The values for `origin.paymentMethod.type` can be found using our [REST API](../rest-api.md), via the [payment methods endpoint](https://api.topperpay.com/payment-methods/crypto-onramp).
 :::
 
   </TabItem>
@@ -119,18 +185,18 @@ The values for `origin.paymentMethod.type`, can be found using our [REST API](..
     "updatedAt": "2023-06-12T17:21:21.240Z",
     "origin": {
       "amount": "100.00",
+      "rate": "1770.27534301775263314892",
       "asset": "USD",
       "paymentMethod": {
         "type": "credit-card"
-      },
-      "rate": "1770.27534301775263314892"
+      }
     },
     "destination": {
-      "address": "0xb794F5eA0ba39494cE839613fffBA74279579268",
       "amount": "0.047116964221968237",
+      "rate": "0.00056488387749632223",
       "asset": "ETH",
       "network": "ethereum",
-      "rate": "0.00056488387749632223"
+      "address": "0xb794F5eA0ba39494cE839613fffBA74279579268"
     },
     "fees": [
       {
@@ -170,22 +236,22 @@ Triggered when a user's order has completed.
 - `updatedAt`: Timestamp at which the order was last updated.
 - `origin`: Object containing information about how the user paid.
   - `amount`: Amount the user paid.
+  - `rate`: Rate used to calculate the amount.
   - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to make the payment.
   - `paymentMethod`: Object containing information about the payment method used.
     - `type`: Type of payment method.
-  - `rate`: Rate used to calculate the amount.
 - `destination`: Object containing information about what the user received.
   - `amount`: Amount the user received.
-  - `asset`: Cryptoasset the user received.
   - `rate`: Rate used to calculate the amount.
+  - `asset`: Cryptoasset the user received.
   - `network`: Network of the receiving asset.
   - `address`: Recipient wallet address.
-  - `ledger` (_optional_): Object containing information about the transaction on the ledger.
-    - `txid`: Transaction ID on the ledger.
-  - `priority` (_optional_): Priority of the crypto transaction (e.g.: `fast` will enable instant send for `Dash` transactions)
   - `tag` (_optional_): Tag of the crypto transaction, used to complement the `address`.
     - `type`: Tag type (e.g.: `memo` or `destination-tag`).
     - `value`: Tag value.
+  - `priority` (_optional_): Priority of the crypto transaction.
+  - `ledger` (_optional_): Object containing information about the transaction on the ledger.
+    - `txid`: Transaction ID on the ledger.
 - `fees`: Array containing fees associated with the order.
   - `amount`: Amount user was charged for this fee.
   - `asset`: Asset used to charge the fee.
@@ -196,7 +262,7 @@ Triggered when a user's order has completed.
   - `flow`: Flow associated with the widget.
 
 :::note
-The values for `origin.paymentMethod.type`,  can be found using our [REST API](../rest-api.md), via the [payment methods endpoint](https://api.topperpay.com/payment-methods/crypto-onramp).
+The values for `origin.paymentMethod.type` can be found using our [REST API](../rest-api.md), via the [payment methods endpoint](https://api.topperpay.com/payment-methods/crypto-onramp).
 :::
 
   </TabItem>
@@ -215,21 +281,21 @@ The values for `origin.paymentMethod.type`,  can be found using our [REST API](.
     "updatedAt": "2023-06-12T17:21:21.240Z",
     "origin": {
       "amount": "100.00",
+      "rate": "1770.27534301775263314892",
       "asset": "USD",
       "paymentMethod": {
         "type": "credit-card"
-      },
-      "rate": "1770.27534301775263314892"
+      }
     },
     "destination": {
-      "address": "0xb794F5eA0ba39494cE839613fffBA74279579268",
       "amount": "0.047116964221968237",
+      "rate": "0.00056488387749632223",
       "asset": "ETH",
       "ledger": {
         "txid": "0xdfa1ea4ddb841af466a5ca78c6e1f0edfaef5e54e79a28238d2a5bb2da4f1911"
       },
       "network": "ethereum",
-      "rate": "0.00056488387749632223"
+      "address": "0xb794F5eA0ba39494cE839613fffBA74279579268"
     },
     "fees": [
       {
@@ -269,20 +335,20 @@ Triggered when a user's order has failed.
 - `updatedAt`: Timestamp at which the order was last updated.
 - `origin`: Object containing information about how the user paid.
   - `amount`: Amount the user paid.
+  - `rate`: Rate used to calculate the amount.
   - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to make the payment.
   - `paymentMethod`: Object containing information about the payment method used.
     - `type`: Type of payment method.
-  - `rate`: Rate used to calculate the amount.
 - `destination`: Object containing information about what the user would have received.
   - `amount`: Amount the user would have received.
-  - `asset`: Cryptoasset the user would have received.
   - `rate`: Rate used to calculate the amount.
+  - `asset`: Cryptoasset the user would have received.
   - `network`: Network of the receiving asset.
   - `address`: Recipient wallet address.
-  - `priority` (_optional_): Priority of the crypto transaction (e.g.: `fast` will enable instant send for `Dash` transactions)
   - `tag` (_optional_): Tag of the crypto transaction, used to completement the `address`.
     - `type`: Tag type (e.g.: `memo` or `destination-tag`).
     - `value`: Tag value.
+  - `priority` (_optional_): Priority of the crypto transaction.
 - `fees`: Array containing fees associated with the order.
   - `amount`: Amount user was charged for this fee.
   - `asset`: Asset used to charge the fee.
@@ -293,7 +359,7 @@ Triggered when a user's order has failed.
   - `flow`: Flow associated with the widget.
 
 :::note
-The values for `origin.paymentMethod.type`,  can be found using our [REST API](../rest-api.md), via the [payment methods endpoint](https://api.topperpay.com/payment-methods/crypto-onramp).
+The values for `origin.paymentMethod.type` can be found using our [REST API](../rest-api.md), via the [payment methods endpoint](https://api.topperpay.com/payment-methods/crypto-onramp).
 :::
 
   </TabItem>
@@ -312,18 +378,18 @@ The values for `origin.paymentMethod.type`,  can be found using our [REST API](.
     "updatedAt": "2023-06-12T17:21:21.240Z",
     "origin": {
       "amount": "100.00",
+      "rate": "1770.27534301775263314892",
       "asset": "USD",
       "paymentMethod": {
         "type": "credit-card"
-      },
-      "rate": "1770.27534301775263314892"
+      }
     },
     "destination": {
-      "address": "0xb794F5eA0ba39494cE839613fffBA74279579268",
       "amount": "0.047116964221968237",
+      "rate": "0.00056488387749632223",
       "asset": "ETH",
       "network": "ethereum",
-      "rate": "0.00056488387749632223"
+      "address": "0xb794F5eA0ba39494cE839613fffBA74279579268"
     },
     "fees": [
       {
