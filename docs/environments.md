@@ -25,7 +25,7 @@ The following card details can be used to force specific outcomes:
 | 4748972091871094 | `amount_invalid`        |
 | 4916526184701927 | `velocity`              |
 
-:::note
+:::tip
 When using the above card numbers, Topper will accept any value for the expiry date and CVV.
 :::
 

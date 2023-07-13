@@ -2,6 +2,9 @@
 sidebar_position: 5
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # Webhooks
 
 ## Introduction
@@ -30,9 +33,6 @@ Full information about the available events and their associated payloads can be
 ## Verifying a request
 
 To help you verify that a request has come from Topper, we include a `X-Topper-JWS-Signature` header with each request. This header is a [JSON Web Signature](https://datatracker.ietf.org/doc/html/rfc7515) with [detached content](https://datatracker.ietf.org/doc/html/rfc7515#appendix-F), meaning the payload portion of the token has been removed. This token can be verified using the public key provided when creating the webhook.
-
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 
 <Tabs>
   <TabItem label="Node.js" value="nodejs" default>
