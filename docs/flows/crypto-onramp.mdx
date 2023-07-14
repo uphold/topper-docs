@@ -77,6 +77,8 @@ Triggered when a user has been charged.
 - `origin`: Object containing information about how the user paid.
   - `amount`: Amount the user paid.
   - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to make the payment.
+  - `paymentMethod`: Object containing information about the payment method used.
+    - `type`: Type of payment method.
   - `rate`: Rate used to calculate the amount.
 - `destination`: Object containing information about what the user will receive.
   - `amount`: Amount the user will receive.
@@ -97,6 +99,9 @@ Triggered when a user has been charged.
   - `name`: Name of the widget.
   - `flow`: Flow associated with the widget.
 
+:::note
+The values for `origin.paymentMethod.type`, can be found using our [REST API](../rest-api.md), via the [payment methods endpoint](https://api.topperpay.com/payment-methods/crypto-onramp).
+:::
 
   </TabItem>
   <TabItem label="Example" value="example">
@@ -115,6 +120,9 @@ Triggered when a user has been charged.
     "origin": {
       "amount": "100.00",
       "asset": "USD",
+      "paymentMethod": {
+        "type": "credit-card"
+      },
       "rate": "1770.27534301775263314892"
     },
     "destination": {
@@ -163,6 +171,8 @@ Triggered when a user's order has completed.
 - `origin`: Object containing information about how the user paid.
   - `amount`: Amount the user paid.
   - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to make the payment.
+  - `paymentMethod`: Object containing information about the payment method used.
+    - `type`: Type of payment method.
   - `rate`: Rate used to calculate the amount.
 - `destination`: Object containing information about what the user received.
   - `amount`: Amount the user received.
@@ -170,6 +180,8 @@ Triggered when a user's order has completed.
   - `rate`: Rate used to calculate the amount.
   - `network`: Network of the receiving asset.
   - `address`: Recipient wallet address.
+  - `ledger` (_optional_): Object containing information about the transaction on the ledger.
+    - `txid`: Transaction ID on the ledger.
   - `priority` (_optional_): Priority of the crypto transaction (e.g.: `fast` will enable instant send for `Dash` transactions)
   - `tag` (_optional_): Tag of the crypto transaction, used to complement the `address`.
     - `type`: Tag type (e.g.: `memo` or `destination-tag`).
@@ -183,6 +195,9 @@ Triggered when a user's order has completed.
   - `name`: Name of the widget.
   - `flow`: Flow associated with the widget.
 
+:::note
+The values for `origin.paymentMethod.type`,  can be found using our [REST API](../rest-api.md), via the [payment methods endpoint](https://api.topperpay.com/payment-methods/crypto-onramp).
+:::
 
   </TabItem>
   <TabItem label="Example" value="example">
@@ -201,12 +216,18 @@ Triggered when a user's order has completed.
     "origin": {
       "amount": "100.00",
       "asset": "USD",
+      "paymentMethod": {
+        "type": "credit-card"
+      },
       "rate": "1770.27534301775263314892"
     },
     "destination": {
       "address": "0xb794F5eA0ba39494cE839613fffBA74279579268",
       "amount": "0.047116964221968237",
       "asset": "ETH",
+      "ledger": {
+        "txid": "0xdfa1ea4ddb841af466a5ca78c6e1f0edfaef5e54e79a28238d2a5bb2da4f1911"
+      },
       "network": "ethereum",
       "rate": "0.00056488387749632223"
     },
@@ -249,6 +270,8 @@ Triggered when a user's order has failed.
 - `origin`: Object containing information about how the user paid.
   - `amount`: Amount the user paid.
   - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to make the payment.
+  - `paymentMethod`: Object containing information about the payment method used.
+    - `type`: Type of payment method.
   - `rate`: Rate used to calculate the amount.
 - `destination`: Object containing information about what the user would have received.
   - `amount`: Amount the user would have received.
@@ -269,6 +292,9 @@ Triggered when a user's order has failed.
   - `name`: Name of the widget.
   - `flow`: Flow associated with the widget.
 
+:::note
+The values for `origin.paymentMethod.type`,  can be found using our [REST API](../rest-api.md), via the [payment methods endpoint](https://api.topperpay.com/payment-methods/crypto-onramp).
+:::
 
   </TabItem>
   <TabItem label="Example" value="example">
@@ -287,6 +313,9 @@ Triggered when a user's order has failed.
     "origin": {
       "amount": "100.00",
       "asset": "USD",
+      "paymentMethod": {
+        "type": "credit-card"
+      },
       "rate": "1770.27534301775263314892"
     },
     "destination": {
