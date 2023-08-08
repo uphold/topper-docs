@@ -28,6 +28,7 @@ The crypto on-ramp flow allows a user to add funds from a credit or debit card t
     - `value`: Tag value.
   - `priority` (_optional_): Priority of the crypto transaction (e.g.: `fast` will enable instant send for `Dash` transactions). Defaults to `normal`.
   - `recipientEditMode` (_optional_): Controls if the user can change `asset`, `network`, `address` and `tag` on the widget. Defaults to `not-editable`.
+  - `label` (_optional_): A label used for display purposes to name the recipient wallet. Defaults to the widget name.
 
 :::note
 At least one of `source.amount` or `target.amount` _must_ be provided, but not both.
