@@ -13,16 +13,16 @@ As a business customer, you may have one or more widgets which will allow your e
 
 Each widget has its own:
 
-- **Public keys**: Public keys are used to verify **bootstrap tokens**.
+- **Signing keys**: Keys used to sign and verify **bootstrap tokens**.
 - **Events** and **webhooks**: Used to receive updates on end user sessions.
 
 During the onboarding process, you will be guided through the process of creating the widgets required for your business needs, and you will be provided with a **widget id** for each.
 
-## Generating a key pair {#generating-keys}
+## Generating a signing key {#generating-signing-keys}
 
 You must generate at least one asymmetric key per widget.
 
-The public key should be sent to Topper as part of the onboarding process, and you will be provided with a unique **key id** which associates your public key with your widget. The private key will be used to sign **bootstrap tokens**, which you will use to [initiate Topper sessions](#initiate-session) for your configured widget for your end users.
+The public key should be sent to Topper as part of the onboarding process, and you will be provided with a unique **key id** which associates your public key with your widget. The private key will be used to sign **bootstrap tokens**, which you will use to [initiate Topper sessions](#initiate-session) for your end users.
 
 Topper supports the following key algorithms:
 
@@ -149,7 +149,7 @@ console.log(await sign(payload, privateKey, options));
   </TabItem>
 </Tabs>
 
-After a **bootstrap token** has been generated, a Topper session can be started by opening a browser window for the end user at the [Topper app URL](./environments.md). The **bootstrap token** should be added to the `bt` parameter of the query string.
+After a **bootstrap token** has been generated, a Topper session can be started by opening a browser window for the end user using Topper's app URL. The **bootstrap token** should be added to the `bt` parameter of the query string.
 
 <Tabs>
   <TabItem label="Sandbox" value="sandbox" default>
@@ -169,3 +169,9 @@ https://app.topperpay.com/?bt=<bootstrap token>
 </Tabs>
 
 In order to prevent social and replay attacks, a **bootstrap token** will only be valid for 60 seconds after its issue time (from the `iat` claim). A **bootstrap token** may only be used to create a session one time, any subsequent attempts to create a session with the same token will be rejected.
+
+## A note about security {#a-note-about-security}
+
+For security reasons, the **widget id** and **key id** we provide for the sandbox and production [environments](./environments.md) will be different. Moreover, you should not use the same signing key for both environments.
+
+As the name implies, signing private keys should be kept secure. Do not expose them to clients. If a signing private key is compromised in any of the environments, reach out to us and we will delete the associated public key from your widget.

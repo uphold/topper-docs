@@ -41,3 +41,7 @@ After successfully onboarding and testing your integration in our sandbox enviro
 
 - Topper App URL: `https://app.topperpay.com/`
 - Topper REST URL: `https://api.topperpay.com/`
+
+:::info
+For security reasons, your **widget id** and **key id** for sandbox won't work in production. You need to generate a new [signing key](./widgets.md#generating-signing-keys) for production usage.
+:::
