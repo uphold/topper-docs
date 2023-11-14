@@ -6,7 +6,7 @@ on:
 
 jobs:
   run-checks:
-    runs-on: [self-hosted, ec2, linux]
+    runs-on: infrastructure-production-toolbox-ubuntu22-2g-1cpu-x64
 
     steps:
     - id: checkout-standards-check-action
