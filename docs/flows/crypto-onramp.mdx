@@ -20,6 +20,8 @@ The crypto on-ramp flow allows a user to add funds from a credit or debit card t
 - `source` (_optional_): An object configuring the asset and amount to be paid.
   - `amount` (_optional_): Amount to be paid.
   - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to make the payment.
+  - `paymentMethod` (_optional_): An object configuring the pre-selected payment method.
+    - `network`: Payment method network (e.g.: `apple-pay`, `google-pay` or `card`).
 - `target` (_optional_): An object configuring recipient wallet.
   - `amount` (_optional_): Amount the user will receive.
   - `asset`: Cryptoasset the user will receive.
@@ -55,10 +57,17 @@ We recommend that you use `XRP` for testing purposes when integrating Topper sin
   "partnerFee": {
     "percentage": "1"
   },
+  "source": {
+    "amount": "100.00",
+    "asset": "USD",
+    "paymentMethod": {
+      "network": "card"
+    }
+  },
   "target": {
+    "address": "0xb794f5ea0ba39494ce839613fffba74279579268",
     "asset": "ETH",
     "network": "ethereum",
-    "address": "0xb794f5ea0ba39494ce839613fffba74279579268",
     "label": "My wallet"
   }
   // highlight-end
