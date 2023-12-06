@@ -1,3 +1,7 @@
+---
+sidebar_position: 8
+---
+
 # Digital wallets
 
 **Does Topper support Apple and Google Pay?**
