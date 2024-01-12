@@ -26,9 +26,11 @@ Full information about the available events and their associated payloads can be
 
 | Flow | Event | Trigger |
 | - | - | - |
+| [crypto_onramp](./flows/crypto-onramp.mdx) | [`order:crypto-onramp:committed`](./flows/crypto-onramp.mdx#ordercrypto-onrampcommitted) | User placed an order. |
 | [crypto_onramp](./flows/crypto-onramp.mdx) | [`order:crypto-onramp:charged`](./flows/crypto-onramp.mdx#ordercrypto-onrampcharged) | User has been charged for their order. |
 | [crypto_onramp](./flows/crypto-onramp.mdx) | [`order:crypto-onramp:completed`](./flows/crypto-onramp.mdx#ordercrypto-onrampcompleted) | User's order has completed. |
 | [crypto_onramp](./flows/crypto-onramp.mdx) | [`order:crypto-onramp:failed`](./flows/crypto-onramp.mdx#ordercrypto-onrampfailed) | User's order has failed. |
+| [crypto_onramp](./flows/crypto-onramp.mdx) | [`order:crypto-onramp:refund:completed`](./flows/crypto-onramp.mdx#ordercrypto-onramprefundcompleted) | User's order has been successfully refunded. |
 
 ## Verifying a request
 
