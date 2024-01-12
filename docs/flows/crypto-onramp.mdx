@@ -152,6 +152,107 @@ When `recipientEditMode` is `all-editable`, the user can change `asset`, `networ
 
 ## Events
 
+
+
+### `order:crypto-onramp:committed`
+
+Triggered when a user has placed an order.
+
+<Tabs>
+  <TabItem label="Schema" value="schema" default>
+
+- `id`: UUID of the order.
+- `status`: Status of the order (`pending`).
+- `createdAt`: Timestamp at which the order was created.
+- `updatedAt`: Timestamp at which the order was last updated.
+- `origin`: Object containing information about how the user paid.
+  - `amount`: Amount the user will pay.
+  - `rate`: Rate used to calculate the amount.
+  - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to make the payment.
+  - `paymentMethod`: Object containing information about the payment method used.
+    - `type`: Type of payment method.
+- `destination`: Object containing information about what the user will receive.
+  - `amount`: Amount the user will receive.
+  - `rate`: Rate used to calculate the amount.
+  - `asset`: Cryptoasset the user will receive.
+  - `network`: Network of the receiving asset.
+  - `address`: Recipient wallet address.
+  - `tag` (_optional_): Tag of the crypto transaction, used to complement the `address`.
+    - `type`: Tag type (e.g.: `memo` or `destination-tag`).
+    - `value`: Tag value.
+  - `priority` (_optional_): Priority of the crypto transaction.
+- `fees`: Array containing fees associated with the order.
+  - `amount`: Amount user was charged for this fee.
+  - `asset`: Asset used to charge the fee.
+  - `type`: Type of fee (`network`, `deposit` or `partner`).
+- `widget`: Widget associated with the session.
+  - `id` UUID of the widget.
+  - `name`: Name of the widget.
+  - `flow`: Flow associated with the widget.
+
+:::note
+The values for `origin.paymentMethod.type` can be found using our [REST API](../rest-api.md), via the [payment methods endpoint](https://api.topperpay.com/payment-methods/crypto-onramp).
+:::
+
+  </TabItem>
+  <TabItem label="Example" value="example">
+
+```json
+{
+  "name": "order:crypto-onramp:committed",
+  "id": "00a991cf-a870-43af-88b8-43c51532831d",
+  "bootstrapTokenId": "141bfa06-481e-4684-96eb-cec4ad529616",
+  "data": {
+    // highlight-start
+    "id": "966b8e24-6a65-442a-942e-577f16288789",
+    "status": "pending",
+    "createdAt": "2023-06-12T17:21:21.240Z",
+    "updatedAt": "2023-06-12T17:21:21.240Z",
+    "origin": {
+      "amount": "100.00",
+      "rate": "1770.27534301775263314892",
+      "asset": "USD",
+      "paymentMethod": {
+        "type": "credit-card"
+      }
+    },
+    "destination": {
+      "amount": "0.047116964221968237",
+      "rate": "0.00056488387749632223",
+      "asset": "ETH",
+      "network": "ethereum",
+      "address": "0xb794F5eA0ba39494cE839613fffBA74279579268"
+    },
+    "fees": [
+      {
+        "amount": "14.17",
+        "asset": "USD",
+        "type": "network"
+      },
+      {
+        "amount": "2.42",
+        "asset": "USD",
+        "type": "deposit"
+      },
+      {
+        "amount": "1.00",
+        "asset": "USD",
+        "type": "partner"
+      }
+    ],
+    "widget": {
+      "id": "998544f2-5b01-4062-9394-22827ff5db6c",
+      "name": "ACME",
+      "flow": "crypto_onramp"
+    }
+    // highlight-end
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
 ### `order:crypto-onramp:charged`
 
 Triggered when a user has been charged.
@@ -378,7 +479,7 @@ Triggered when a user's order has failed.
   - `asset`: Cryptoasset the user would have received.
   - `network`: Network of the receiving asset.
   - `address`: Recipient wallet address.
-  - `tag` (_optional_): Tag of the crypto transaction, used to completement the `address`.
+  - `tag` (_optional_): Tag of the crypto transaction, used to complement the `address`.
     - `type`: Tag type (e.g.: `memo` or `destination-tag`).
     - `value`: Tag value.
   - `priority` (_optional_): Priority of the crypto transaction.
@@ -441,6 +542,114 @@ The values for `origin.paymentMethod.type` can be found using our [REST API](../
         "type": "partner"
       }
     ],
+    "widget": {
+      "id": "998544f2-5b01-4062-9394-22827ff5db6c",
+      "name": "ACME",
+      "flow": "crypto_onramp"
+    }
+    // highlight-end
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+### `order:crypto-onramp:refund:completed`
+
+Triggered when a user's order has been successfully refunded.
+
+<Tabs>
+  <TabItem label="Schema" value="schema" default>
+
+- `id`: UUID of the order.
+- `status`: Status of the order (`refunded`).
+- `createdAt`: Timestamp at which the order was created.
+- `updatedAt`: Timestamp at which the order was last updated.
+- `origin`: Object containing information about how the user paid.
+  - `amount`: Amount the user paid.
+  - `rate`: Rate used to calculate the amount.
+  - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to make the payment.
+  - `paymentMethod`: Object containing information about the payment method used.
+    - `type`: Type of payment method.
+- `destination`: Object containing information about what the user would have received.
+  - `amount`: Amount the user would have received.
+  - `rate`: Rate used to calculate the amount.
+  - `asset`: Cryptoasset the user would have received.
+  - `network`: Network of the receiving asset.
+  - `address`: Recipient wallet address.
+  - `tag` (_optional_): Tag of the crypto transaction, used to complement the `address`.
+    - `type`: Tag type (e.g.: `memo` or `destination-tag`).
+    - `value`: Tag value.
+  - `priority` (_optional_): Priority of the crypto transaction.
+- `fees`: Array containing fees associated with the order.
+  - `amount`: Amount user was charged for this fee.
+  - `asset`: Asset used to charge the fee.
+  - `type`: Type of fee (`network`, `deposit` or `partner`).
+- `refund`: Object containing information about how much was refunded to the user.
+  - `formattedAmount`: Amount refunded to the user
+  - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to make the payment.
+  - `rate`: Rate used to calculate the amount.
+- `widget`: Widget associated with the session.
+  - `id` UUID of the widget.
+  - `name`: Name of the widget.
+  - `flow`: Flow associated with the widget.
+
+:::note
+The values for `origin.paymentMethod.type` can be found using our [REST API](../rest-api.md), via the [payment methods endpoint](https://api.topperpay.com/payment-methods/crypto-onramp).
+:::
+
+  </TabItem>
+  <TabItem label="Example" value="example">
+
+```json
+{
+  "name": "order:crypto-onramp:refund:completed",
+  "id": "00a991cf-a870-43af-88b8-43c51532831d",
+  "bootstrapTokenId": "141bfa06-481e-4684-96eb-cec4ad529616",
+  "data": {
+    // highlight-start
+    "id": "966b8e24-6a65-442a-942e-577f16288789",
+    "status": "refunded",
+    "createdAt": "2023-06-12T17:21:21.240Z",
+    "updatedAt": "2023-06-12T17:21:21.240Z",
+    "origin": {
+      "amount": "100.00",
+      "rate": "1770.27534301775263314892",
+      "asset": "USD",
+      "paymentMethod": {
+        "type": "credit-card"
+      }
+    },
+    "destination": {
+      "amount": "0.047116964221968237",
+      "rate": "0.00056488387749632223",
+      "asset": "ETH",
+      "network": "ethereum",
+      "address": "0xb794F5eA0ba39494cE839613fffBA74279579268"
+    },
+    "fees": [
+      {
+        "amount": "14.17",
+        "asset": "USD",
+        "type": "network"
+      },
+      {
+        "amount": "2.42",
+        "asset": "USD",
+        "type": "deposit"
+      },
+      {
+        "amount": "1.00",
+        "asset": "USD",
+        "type": "partner"
+      }
+    ],
+    "refund": {
+      "asset": "USD",
+      "formattedAmount": "$ 100.00",
+      "rate": "1770.27534301775263314892",
+    },
     "widget": {
       "id": "998544f2-5b01-4062-9394-22827ff5db6c",
       "name": "ACME",
