@@ -168,6 +168,29 @@ https://app.topperpay.com/?bt=<bootstrap token>
   </TabItem>
 </Tabs>
 
+Using the [Web SDK](./web-sdk.md), the configuration process is seamless, allowing you to choose between multiple ways of initializing Topper and have support for [browser events](./browser-events.md):
+
+<Tabs>
+  <TabItem label="Sandbox" value="sandbox" default>
+
+```
+const topper = new TopperWebSdk({ environment: TOPPER_ENVIRONMENTS.SANDBOX });
+
+topper.initialize({ bootstrapToken: <bootstrap token> });
+```
+
+  </TabItem>
+  <TabItem label="Production" value="production" default>
+
+```
+const topper = new TopperWebSdk();
+
+topper.initialize({ bootstrapToken: <bootstrap token> });
+```
+
+  </TabItem>
+</Tabs>
+
 In order to prevent social and replay attacks, a **bootstrap token** will only be valid for 60 seconds after its issue time (from the `iat` claim). A **bootstrap token** may only be used to create a session one time, any subsequent attempts to create a session with the same token will be rejected.
 
 ## A note about security {#a-note-about-security}
