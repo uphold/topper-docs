@@ -4,27 +4,20 @@ sidebar_position: 6
 
 # Browser events
 
-If the Topper browser session is opened using JavaScript — for example by using `window.open()` — then you can receive updates on the user's session by using the [`postMessage` API](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage).
+You can receive updates on the user's session after initializing Topper like:
 
 ```js
 // Generate a bootstrap token.
 const bootstrapToken = await generateBootstrapToken();
 
-// Open a Topper window using the bootstrap token.
-const topperWindow = window.open(`https://app.topperpay.com/?bt=${bootstrapToken}`);
+// Open Topper using the bootstrap token.
+const topper = new TopperWebSdk();
 
-// Add event listeners
-topperWindow.addEventListener('message', (event) => {
-  // Ignore messages that didn't originate from Topper.
-  if (event.origin !== 'https://app.topperpay.com') {
-    return;
-  }
+topper.initialize({ bootstrapToken });
 
-  // Log the message data.
-  console.log(event.data);
-});
-```
+// Listen to a single event.
+topper.on(TOPPER_EVENTS.ORDER_PLACED, ({ data }) => {});
 
-:::note
-Browser events have not yet been implemented, but will be available soon. We will release a JavaScript SDK to make it easier to open a Topper browser session and listen to events.
-:::
+// Listen to all events.
+topper.on(TOPPER_EVENTS.ALL, ({ data, name }) => {});
+
