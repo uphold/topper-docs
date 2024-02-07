@@ -16,16 +16,16 @@ These payment options offer a seamless and convenient way for your customers to 
 
 ### Web
 
-| Browser | Scenario | Apple Pay | Google Pay |
-|:-------:|:--------:|:---------:|:----------:|
-| Chrome (and others) | Desktop |    ❌     |     ✅     |
-| Chrome (and others) | Mobile |    ❌     |     ✅     |
-| Chrome (and others) | Embed with an iframe - Desktop |    ❌     |     ✅     |
-| Chrome (and others) | Embed with an iframe - Mobile |    ❌     |     ✅     |
-| Safari | Desktop |    ✅     |     ✅     |
-| Safari | Mobile |    ✅     |     ✅     |
-| Safari | Embed with an iframe - Desktop | ✅ |     ✅     |
-| Safari | Embed with an iframe - Mobile | ✅ |     ✅     |
+| Browser | Scenario | Apple Pay | Google Pay | Pix |
+|:-------:|:--------:|:---------:|:----------:|:---:|
+| Chrome (and others) | Desktop |    ❌     |     ✅     |  ✅  |
+| Chrome (and others) | Mobile |    ❌     |     ✅     |  ✅  |
+| Chrome (and others) | Embed with an iframe - Desktop |    ❌     |    ✅     |  ✅  |
+| Chrome (and others) | Embed with an iframe - Mobile |    ❌     |     ✅     |  ✅  |
+| Safari | Desktop |    ✅     |     ✅     |  ✅  |
+| Safari | Mobile |    ✅     |     ✅     |  ✅  |
+| Safari | Embed with an iframe - Desktop | ✅ |     ✅     |  ✅  |
+| Safari | Embed with an iframe - Mobile | ✅ |     ✅     |  ✅  |
 
 **Notes:**
 - Set `allow="payment"` on the `iframe` when Topper is embed.
@@ -33,19 +33,19 @@ These payment options offer a seamless and convenient way for your customers to 
 
 ### Electron
 
-|  Apple Pay | Google Pay |
-|:----------:|:----------:|
-|     ❌      |     ✅     |
+|  Apple Pay | Google Pay | Pix |
+|:----------:|:----------:|:---:|
+|     ❌      |     ✅     |  ✅  |
 
 **Notes:**
 - When using Google Pay, a browser tab will be open to continue the payment on Topper.
 
 ### Mobile App
 
-|    OS    | Apple Pay | Google Pay |
-|:-------:|:---------:|:----------:|
-| Android |     ❌     |     ✅     |
-|   iOS   |     ✅     |     ✅     |
+|    OS    | Apple Pay | Google Pay | Pix |
+|:-------:|:---------:|:----------:|:---:|
+| Android |     ❌     |     ✅     |  ✅  |
+|   iOS   |     ✅     |     ✅     |  ✅  |
 
 **Notes:**
 - If you are redirecting to Topper through the user's browser, no extra configuration is necessary.
