@@ -11,6 +11,10 @@ Topper's sandbox is an environment that simulates the live Topper production env
 - Topper App URL: `https://app.sandbox.topperpay.com/`
 - Topper REST URL: `https://api.sandbox.topperpay.com/`
 
+:::info
+If you face issues initializing Topper and see a 'something went wrong' error page, check the devtools console for details on the **bootstrap token** validation.
+:::
+
 ### Email authentication and phone verification codes
 
 You can bypass email authentication and phone verification codes by typing `000000`.
