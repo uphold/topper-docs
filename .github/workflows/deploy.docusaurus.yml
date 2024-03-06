@@ -15,7 +15,6 @@ jobs:
       pull-requests: write
 
     steps:
-
     - name: Checkout code
       uses: actions/checkout@v3
 
@@ -32,7 +31,7 @@ jobs:
       run: npm run build
 
     - name: Publish to Cloudflare Pages
-      id: cloudflare
+      id: cloudflare-pages
       uses: cloudflare/pages-action@v1
       with:
         apiToken: ${{ secrets.CLOUDFLARE_PAGES_API_TOKEN }}
@@ -47,7 +46,7 @@ jobs:
           <span aria-hidden="true">🚀</span> Preview has been deployed.
 
           |  Name | Link |
-          |---------------------------------|------------------------|
-          |<span aria-hidden="true">🔨</span> Commit SHA | ${{ github.sha }} |
-          |<span aria-hidden="true">🔍</span> Deploy log | ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} |
-          |<span aria-hidden="true">🚀</span> Preview URL | [${{ steps.cloudflare.outputs.url }}](${{ steps.cloudflare.outputs.url }}) |
+          |------ | ---- |
+          | <span aria-hidden="true">🔨</span> Commit SHA | ${{ github.sha }} |
+          | <span aria-hidden="true">🔍</span> Deploy log | ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} |
+          | <span aria-hidden="true">🚀</span> Preview URL | [${{ steps.cloudflare-pages.outputs.url }}](${{ steps.cloudflare-pages.outputs.url }}) |
