@@ -30,7 +30,15 @@ const config = {
         alt: 'Logo',
         src: 'images/logo-light.svg',
         srcDark: 'images/logo-dark.svg'
-      }
+      },
+      items: [
+        {
+          href: 'https://github.com/uphold/topper-docs',
+          position: 'right',
+          className: 'header-github-link',
+          'aria-label': 'GitHub repository',
+        }
+      ]
     },
     prism: {
       darkTheme: darkCodeTheme,
