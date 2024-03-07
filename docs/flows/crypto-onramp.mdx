@@ -52,7 +52,7 @@ We recommend that you use `XRP` for testing purposes when integrating Topper sin
   </TabItem>
   <TabItem label="Example" value="example">
 
-```json
+```js
 {
   "iat": 1679538023,
   "jti": "4b552af1-1592-42f8-bbc9-dac28e2b4000",
@@ -92,7 +92,7 @@ We recommend that you use `XRP` for testing purposes when integrating Topper sin
 
 When `recipientEditMode` is `not-editable`, the user can can't change `asset`, `network`, `address` or `tag` on the widget. This means that these fields are all required on the bootstrap token.
 
-```json
+```js
 {
   "iat": 1679538023,
   "jti": "4b552af1-1592-42f8-bbc9-dac28e2b4000",
@@ -114,7 +114,7 @@ When `recipientEditMode` is `not-editable`, the user can can't change `asset`, `
 
 When `recipientEditMode` is `only-address-and-tag`, the user can only change `address` and `tag` on the widget. This means that these fields are optional on the bootstrap token but you can still provide values for them. On the other hand, `asset` and `network` become mandatory.
 
-```json
+```js
 {
   "iat": 1679538023,
   "jti": "4b552af1-1592-42f8-bbc9-dac28e2b4000",
@@ -134,7 +134,7 @@ When `recipientEditMode` is `only-address-and-tag`, the user can only change `ad
 
 When `recipientEditMode` is `all-editable`, the user can change `asset`, `network`, `address` and `tag` on the widget. This means that all these fields are optional on the bootstrap token but you can still provide values for them.
 
-```json
+```js
 {
   "iat": 1679538023,
   "jti": "4b552af1-1592-42f8-bbc9-dac28e2b4000",
@@ -197,7 +197,7 @@ The values for `origin.paymentMethod.type` can be found using our [REST API](../
   </TabItem>
   <TabItem label="Example" value="example">
 
-```json
+```js
 {
   "name": "order:crypto-onramp:committed",
   "id": "00a991cf-a870-43af-88b8-43c51532831d",
@@ -296,7 +296,7 @@ The values for `origin.paymentMethod.type` can be found using our [REST API](../
   </TabItem>
   <TabItem label="Example" value="example">
 
-```json
+```js
 {
   "name": "order:crypto-onramp:charged",
   "id": "00a991cf-a870-43af-88b8-43c51532831d",
@@ -397,7 +397,7 @@ The values for `origin.paymentMethod.type` can be found using our [REST API](../
   </TabItem>
   <TabItem label="Example" value="example">
 
-```json
+```js
 {
   "name": "order:crypto-onramp:completed",
   "id": "00a991cf-a870-43af-88b8-43c51532831d",
@@ -499,7 +499,7 @@ The values for `origin.paymentMethod.type` can be found using our [REST API](../
   </TabItem>
   <TabItem label="Example" value="example">
 
-```json
+```js
 {
   "name": "order:crypto-onramp:failed",
   "id": "00a991cf-a870-43af-88b8-43c51532831d",
@@ -602,7 +602,7 @@ The values for `origin.paymentMethod.type` can be found using our [REST API](../
   </TabItem>
   <TabItem label="Example" value="example">
 
-```json
+```js
 {
   "name": "order:crypto-onramp:refund:completed",
   "id": "00a991cf-a870-43af-88b8-43c51532831d",

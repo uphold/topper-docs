@@ -10,7 +10,7 @@ The default is the dark theme, but you can easily switch by adding `&theme=light
 
 **Using the [Web SDK](./web-sdk.md):**
 
-```
+```js
 const topper = new TopperWebSdk({ theme: TOPPER_THEMES.LIGHT });
 
 topper.initialize({ bootstrapToken: <bootstrap token> });
