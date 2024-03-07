@@ -6,4 +6,4 @@ sidebar_position: 10
 
 The Web SDK is designed to help you integrate Topper in a seamless way. It supports multiple ways of initializing Topper, adding configuration, browser events and multi-instance support.
 
-Please, refer to the [offical documentation](https://github.com/uphold/topper-web-sdk).
+Please, refer to the [official documentation](https://github.com/uphold/topper-web-sdk).
