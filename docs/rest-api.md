@@ -13,6 +13,10 @@ Topper offers a REST API you can use to:
 - Get the list of supported payment methods per flow.
 - Create a pricing simulation for a specific flow.
 
+:::info
+The REST API has rate-limiting rules in place. If you plan to use the REST API extensively, reach out to us and we will whitelist the IPs you use to make requests to this API.
+:::
+
 ## OpenAPI documentation
 
 To make it easier to consume the REST API, there's an [OpenAPI specification](https://www.openapis.org/) available at https://api.topperpay.com/docs/json.
