@@ -25,7 +25,7 @@ The following card details can be used to force specific outcomes:
 
 | Card number      | Outcome                 |
 |------------------|-------------------------|
-| 4659105569051157 | `success`               |
+| 4921817844445119 | `success`               |
 | 4312810406702461 | `card_unauthorized`     |
 | 4414745735532923 | `card_declined_by_bank` |
 | 4916426384864999 | `request_data_invalid`  |
