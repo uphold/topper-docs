@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: infrastructure-production-toolbox-ubuntu22-4g-2cpu-x64
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       deployments: write
