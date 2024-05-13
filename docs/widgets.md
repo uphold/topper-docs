@@ -191,7 +191,7 @@ topper.initialize({ bootstrapToken: <bootstrap token> });
   </TabItem>
 </Tabs>
 
-In order to prevent social and replay attacks, a **bootstrap token** will only be valid for 60 seconds after its issue time (from the `iat` claim). A **bootstrap token** may only be used to create a session one time, any subsequent attempts to create a session with the same token will be rejected.
+In order to prevent social and replay attacks, a **bootstrap token** will only be valid for 3 minutes after its issue time (from the `iat` claim). A **bootstrap token** may only be used to create a session one time, any subsequent attempts to create a session with the same token will be rejected.
 
 ## A note about security {#a-note-about-security}
 
