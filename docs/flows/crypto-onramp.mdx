@@ -381,6 +381,7 @@ Triggered when a user's order has completed.
   - `amount`: Amount the user received.
   - `rate`: Rate used to calculate the amount.
   - `asset`: Cryptoasset the user received.
+  - `blockchainUrl`: URL to view the transaction details on a blockchain explorer.
   - `network`: Network of the receiving asset.
   - `address`: Recipient wallet address.
   - `tag` (_optional_): Tag of the crypto transaction, used to complement the `address`.
@@ -429,6 +430,7 @@ The values for `origin.paymentMethod.type` can be found using our [REST API](../
       "amount": "0.047116964221968237",
       "rate": "0.00056488387749632223",
       "asset": "ETH",
+      "blockchainUrl": "https://etherscan.io/tx/0xdfa1ea4ddb841af466a5ca78c6e1f0edfaef5e54e79a28238d2a5bb2da4f1911",
       "ledger": {
         "txid": "0xdfa1ea4ddb841af466a5ca78c6e1f0edfaef5e54e79a28238d2a5bb2da4f1911"
       },
