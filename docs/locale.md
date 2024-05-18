@@ -4,7 +4,7 @@ sidebar_position: 9
 
 # Locale
 
-**What are the languages supported by Topper?**
+**Which languages are supported by Topper?**
 
 Topper supports English and Brazilian Portuguese.
 
@@ -14,7 +14,7 @@ By default, Topper will use the locale set on the user's browser. If that locale
 
 To set a specific locale, you can set it as query parameter such as: `https://app.topperpay.com/?bt=<bootstrap token>&locale=en`. The supported values are `en`, `en-US`, `pt` and `pt-BR`.
 
-When the user user authenticates in Topper, the locale will be set accordingly with the user preferences.
+When the user authenticates in Topper, the locale will be set accordingly to the user preferences.
 
 **Using the [Web SDK](./web-sdk.md):**
 
