@@ -35,32 +35,22 @@ Topper supports the following key algorithms:
 Here is a quick Node.js snippet to generate an ES256 key pair in Topper's preferred JWK format:
 
 ```js
-const { generateKeyPairSync } = require('crypto');
+import { generateKeyPairSync } from 'crypto';
 
-// Generate a key pair
+// Generate a key pair.
+const alg = 'ES256';
 const { privateKey, publicKey } = generateKeyPairSync('ec', { namedCurve: 'prime256v1' });
 
-// Output in JWK format
-console.log({
-  privateKey: privateKey.export({ format: 'jwk' }),
-  publicKey: publicKey.export({ format: 'jwk' })
-});
+// Output in JWK format.
+console.log('Private JWK:');
+console.log(JSON.stringify({ alg, ...privateKey.export({ format: 'jwk' }) }));
+console.log('Public JWK:');
+console.log(JSON.stringify({ alg, ...publicKey.export({ format: 'jwk' }) }));
 
-// {
-//   privateKey: {
-//     kty: 'EC',
-//     x: 'zXlHACgk6oYgeTGirjFMToKXPIulH19yB2ywv3ji0L8',
-//     y: 'CrYvGe6X_A-8YujOMpHlKOmNtUzHXQF4-O0hR6Y9XTo',
-//     crv: 'P-256',
-//     d: 'LerkJ-8frEQFj-0Yiw_s6_d8gu0qwha_ita4RIsYO2Q'
-//   },
-//   publicKey: {
-//     kty: 'EC',
-//     x: 'zXlHACgk6oYgeTGirjFMToKXPIulH19yB2ywv3ji0L8',
-//     y: 'CrYvGe6X_A-8YujOMpHlKOmNtUzHXQF4-O0hR6Y9XTo',
-//     crv: 'P-256'
-//   }
-// }
+// Private JWK:
+// {"alg":"ES256","kty":"EC","x":"dxk0WKKhOyFbU0eZD0plgOB8l9rM-SD5NDgnGpvg99o","y":"nIMebHLyyisqfQKkb-bCp6dVNwVqDR3FLA5ZWUZ_yQ8","crv":"P-256","d":"mdAQEjZBkxtoVeque2wXqebfo1HY0_C2uGApqeKEaX8"}
+// Public JWK:
+// {"alg":"ES256","kty":"EC","x":"dxk0WKKhOyFbU0eZD0plgOB8l9rM-SD5NDgnGpvg99o","y":"nIMebHLyyisqfQKkb-bCp6dVNwVqDR3FLA5ZWUZ_yQ8","crv":"P-256"}
 ```
 
   </TabItem>
@@ -101,33 +91,40 @@ The _payload_ should also contain configuration specific to the widget for which
 <Tabs>
   <TabItem label="Node.js" value="nodejs" default>
 
-Here is a Node.js snippet to generate a **bootstrap token** for the [crypto on-ramp](./flows/crypto-onramp.mdx) flow using the [`jsonwebtoken`](https://github.com/auth0/node-jsonwebtoken) package:
+Here is a Node.js snippet to generate a **bootstrap token** for the [crypto on-ramp](./flows/crypto-onramp.mdx) flow using the [`jsonwebtoken`](https://github.com/auth0/node-jsonwebtoken) package. Please note that the code below is for illustrative purposes only, and the integration should be adapted to your application.
 
 ```js
-const { createPrivateKey, randomUUID } = require('crypto');
-const { promisify } = require('util');
-const jsonwebtoken = require('jsonwebtoken');
+import { createPrivateKey, randomUUID } from 'node:crypto';
+import { promisify } from 'node:util';
+import jsonwebtoken from 'jsonwebtoken';
 
-// Load private key in JWK format from an environment variable.
-const privateKeyJwk = JSON.parse(process.env.MY_SIGNING_PRIVATE_KEY);
+// Function to create a bootstrap token signer to be reused.
+const createBootstrapTokenSigner = (widgetId, keyId, jwk) => {
+  const jwkObject = JSON.parse(jwk);
+  const privateKey = createPrivateKey({ format: 'jwk', key: jwkObject });
+  const options = { algorithm: jwkObject.alg, keyid: keyId };
 
-// Promisify the `jsonwebtoken.sign()` method for simplicity.
-const sign = promisify(jsonwebtoken.sign);
+  // Promisify `jsonwebtoken.sign()` function to use async/await.
+  const signJwt = promisify(jsonwebtoken.sign);
 
-// Parse the JWK formatted key.
-const privateKey = createPrivateKey({ format: 'jwk', key: privateKeyJwk });
+  return async claims => {
+    claims = { ...claims, sub: widgetId };
 
-// Create the options the `jsonwebtoken.sign()` method.
-const options = {
-  algorithm: 'ES256',
-  keyid: '<key id>'
+    return await signJwt(claims, privateKey, options);
+  };
 };
 
-// Create the payload for the bootstrap token, note that the
-// `jsonwebtoken.sign()` method automatically adds the `iat` claim.
-const payload = {
+// Widget id example supplied by Topper.
+const widgetId = 'd259f6ac-3e8d-46eb-9e6c-c92e138b7660';
+// Key id example supplied by Topper.
+const keyId = 'c084a85d-c486-4035-9c60-8cec81d8b8f5';
+// Private JWK example you generated.
+const jwk = '{"alg":"ES256","kty":"EC","x":"dxk0WKKhOyFbU0eZD0plgOB8l9rM-SD5NDgnGpvg99o","y":"nIMebHLyyisqfQKkb-bCp6dVNwVqDR3FLA5ZWUZ_yQ8","crv":"P-256","d":"mdAQEjZBkxtoVeque2wXqebfo1HY0_C2uGApqeKEaX8"}';
+
+// Example of creating a bootstrap token.
+const signBootstrapToken = createBootstrapTokenSigner(widgetId, keyId, jwk);
+const bootstrapToken = await signBootstrapToken({
   jti: randomUUID(),
-  sub: '<widget id>',
   source: {
     amount: '100.00',
     asset: 'USD'
@@ -138,12 +135,97 @@ const payload = {
     network: 'ethereum',
     label: 'My wallet'
   }
-};
+});
 
-// Output the signed bootstrap token.
-console.log(await sign(payload, privateKey, options));
+console.log('Bootstrap token:', bootstrapToken);
+```
 
-// 'eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImJmYmIxZTBhLTc1ZDYtNDFlYi1hZjY4LTY1ODRlMTY3ZDQwMCJ9.eyJqdGkiOiJmNThmZTk0Yi1kNjUxLTQ4NmYtOTEwYS1jZmMyMWYyZGM1NTciLCJzdWIiOiIyOWQwY2U4Mi02ZTdkLTQ5OGMtYTUxZC03MDcxZGUyYTQ4Y2UiLCJzb3VyY2UiOnsiYW1vdW50IjoiMTAwLjAwIiwiYXNzZXQiOiJVU0QifSwidGFyZ2V0Ijp7ImFkZHJlc3MiOiIweGI3OTRmNWVhMGJhMzk0OTRjZTgzOTYxM2ZmZmJhNzQyNzk1NzkyNjgiLCJhc3NldCI6IkVUSCIsIm5ldHdvcmsiOiJldGhlcmV1bSIsImxhYmVsIjoiTXkgd2FsbGV0In0sImlhdCI6MTY3OTMyMTI0Nn0.uVwWAC37b6qdc74aGSRCcXzNDIzOXCdibFcv6k68tFXCYknItzkoUDapMl798r2nXEq9jq7VSZMuYvbakmo0Hw'
+  </TabItem>
+
+  <TabItem label="Java" value="java" default>
+
+Here is a Java snippet to generate a **bootstrap token** for the [crypto on-ramp](./flows/crypto-onramp.mdx) flow using [`nimbus-jose-jwt`](https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt). Please note that the code below is for illustrative purposes only, and the integration should be adapted to your application.
+
+```java
+package example;
+
+import java.text.ParseException;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import static java.util.Map.entry;
+
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.factories.*;
+import com.nimbusds.jose.jwk.*;
+import com.nimbusds.jwt.*;
+
+public class BootstrapTokenSigner {
+  private final String keyId;
+  private final String widgetId;
+  private final JWK jwk;
+  private final JWSSigner jwsSigner;
+
+  public static void main(String[] args) throws ParseException, JOSEException {
+    // Widget id example supplied by Topper.
+    String widgetId = "d259f6ac-3e8d-46eb-9e6c-c92e138b7660";
+    // Key id example supplied by Topper.
+    String keyId = "c084a85d-c486-4035-9c60-8cec81d8b8f5";
+    // Private JWK example you generated.
+    String jwk = "{\"alg\":\"ES256\",\"kty\":\"EC\",\"x\":\"dxk0WKKhOyFbU0eZD0plgOB8l9rM-SD5NDgnGpvg99o\",\"y\":\"nIMebHLyyisqfQKkb-bCp6dVNwVqDR3FLA5ZWUZ_yQ8\",\"crv\":\"P-256\",\"d\":\"mdAQEjZBkxtoVeque2wXqebfo1HY0_C2uGApqeKEaX8\"}";
+
+    // Example of creating a bootstrap token.
+    BootstrapTokenSigner bootstrapTokenSigner = new BootstrapTokenSigner(widgetId, keyId, jwk);
+    String bootstrapToken = bootstrapTokenSigner.sign(Map.ofEntries(
+      entry("source", Map.ofEntries(
+        entry("amount", "100.00"),
+        entry("asset", "USD"))
+      ),
+      entry("target", Map.ofEntries(
+        entry("address", "0xb794f5ea0ba39494ce839613fffba74279579268"),
+        entry("asset", "ETH"),
+        entry("network", "ethereum"),
+        entry("label", "My wallet")
+      ))
+    ));
+
+    System.out.printf("Bootstrap token: %s", bootstrapToken);
+  }
+
+  public BootstrapTokenSigner(String widgetId, String keyId, String jwkStr) throws ParseException, JOSEException {
+    this.widgetId = widgetId;
+    this.keyId = keyId;
+
+    // Parse JWK and create a signer to be used when signing JWTs.
+    jwk = JWK.parse(jwkStr);
+    jwsSigner = new DefaultJWSSignerFactory().createJWSSigner(jwk);
+  }
+
+  public String sign(Map<String, Object> claims) throws JOSEException, ParseException {
+    claims = new HashMap<>(claims);
+
+    claims.put("sub", this.widgetId);
+
+    // Add iat claim if not present.
+    if (!claims.containsKey("iat")) {
+      claims.put("iat", Instant.now().getEpochSecond());
+    }
+
+    JWTClaimsSet jwtClaimsSet = JWTClaimsSet.parse(claims);
+    JWSAlgorithm jwsAlgorithm = JWSAlgorithm.parse(jwk.getAlgorithm().getName());
+    JWSHeader jwsHeader = new JWSHeader.Builder(jwsAlgorithm)
+        .type(JOSEObjectType.JWT)
+        .keyID(keyId)
+        .build();
+
+    SignedJWT signedJwt = new SignedJWT(jwsHeader, jwtClaimsSet);
+
+    signedJwt.sign(jwsSigner);
+
+    return signedJwt.serialize();
+  }
+}
 ```
 
   </TabItem>

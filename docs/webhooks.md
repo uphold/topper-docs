@@ -34,36 +34,131 @@ Full information about the available events and their associated payloads can be
 
 ## Verifying a request
 
-To help you verify that a request has come from Topper, we include a `X-Topper-JWS-Signature` header with each request. This header is a [JSON Web Signature](https://datatracker.ietf.org/doc/html/rfc7515) with [detached content](https://datatracker.ietf.org/doc/html/rfc7515#appendix-F), meaning the payload portion of the token has been removed. This token can be verified using the public key provided when creating the webhook.
+To help you verify that a request has come from Topper, we include a `X-Topper-JWS-Signature` header with each request. This header is a [JSON Web Signature](https://datatracker.ietf.org/doc/html/rfc7515) (JWS) with [detached content](https://datatracker.ietf.org/doc/html/rfc7515#appendix-F), meaning the payload portion of the token has been removed. This token can be verified using the public key provided when creating the webhook.
 
 <Tabs>
   <TabItem label="Node.js" value="nodejs" default>
 
-Here is a Node.js snippet to verify a signature using the [`jsonwebtoken`](https://github.com/auth0/node-jsonwebtoken) package:
+Here is a Node.js snippet to verify a signature using the [`jsonwebtoken`](https://github.com/auth0/node-jsonwebtoken) package. Please note that the code below is for illustrative purposes only, and the integration should be adapted to your application.
 
 ```js
-const { createPublicKey } = require('crypto');
-const { promisify } = require('util');
-const jsonwebtoken = require('jsonwebtoken');
+import { createPublicKey } from 'node:crypto';
+import { promisify } from 'node:util';
+import jsonwebtoken from 'jsonwebtoken';
 
-// Verify a webhook request.
-async function verifyWebhookRequest(request) {
-  // Load public key in JWK format from an environment variable.
-  const publicKeyJwk = JSON.parse(process.env.TOPPER_WEBHOOK_PUBLIC_KEY);
+// Function that returns a webhook verifier to be reused across requests.
+const createWebhookVerifier = jwk => {
+  const jwkObject = JSON.parse(jwk);
+  const publicKey = createPublicKey({ format: 'jwk', key: jwkObject });
+  const options = { algorithms: [jwkObject.alg] }
 
-  // Promisify the `jsonwebtoken.verify()` method for simplicity.
-  const verify = promisify(jsonwebtoken.verify);
+  // Promisify the `jsonwebtoken.verify()` function to use async/await.
+  const verifyJwt = promisify(jsonwebtoken.verify);
 
-  // Parse the JWK formatted key.
-  const publicKey = createPublicKey({ format: 'jwk', key: publicKeyJwk });
+  return async (body, jws) => {
+    // Replace the payload portion of the JWS for verification.
+    const [header, , signature] = jws.split('.');
+    const payload = Buffer.from(body).toString('base64url');
+    const token = `${header}.${payload}.${signature}`;
 
-  // Replace the payload portion of the JWS for verification.
-  const [header,, signature] = request.headers['X-Topper-JWS-Signature'].split('.');
-  const payload = Buffer.from(JSON.stringify(request.body)).toString('base64url');
-  const token = `${header}.${payload}.${signature}`;
+    // Verify the token.
+    try {
+      await verifyJwt(token, publicKey, options);
+    } catch (error) {
+      if (error instanceof jsonwebtoken.JsonWebTokenError) {
+        return false;
+      }
 
-  // Verify the complete token.
-  await verify(token, publicKey);
+      throw error;
+    }
+
+    return true;
+  };
+};
+
+// JWK public key example supplied by Topper.
+const jwk = '{"x":"7-INQ150R-MCWlj5X_wyGLRIRYAA-o8NakJiUq7gOGg","y":"dM-GsyJvdDOuALE3l-U9lPL8V3gY_5BPjLH539yTdKU","alg":"ES256","crv":"P-256","kid":"15a5142e-c20f-466e-8132-234dbdae97e7","kty":"EC"}'
+// Request body example.
+const body = '{"foo":"bar"}';
+// X-Topper-JWS-Signature request header example.
+const jws = 'eyJhbGciOiJFUzI1NiJ9..2H0Ypm5sVzuSpgyZySdAJan05lYxctqhmO8btghFQQzkisvSlNvNWzQ1kqTPXTLP_dR4zQZrTsSsShAK51I4EQ';
+
+// Example of verifying a webhook request.
+const verifyWebhook = createWebhookVerifier(jwk);
+const verified = await verifyWebhook(body, jws);
+
+console.log('Verified:', verified);
+```
+
+  </TabItem>
+
+  <TabItem label="Java" value="java">
+
+Here is a Java class to verify a signature using the [`nimbus-jose-jwt`](https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt). Please note that the code below is for illustrative purposes only, and the integration should be adapted to your application.
+
+```java
+package example;
+
+import java.security.Key;
+import java.text.ParseException;
+import java.util.Arrays;
+
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.factories.*;
+import com.nimbusds.jose.jwk.*;
+
+public class WebhookVerifier {
+  private final JWK jwk;
+  private final Key key;
+
+  public static void main(String[] args) throws ParseException {
+    // JWK public key example supplied by Topper.
+    String jwk = "{\"x\":\"7-INQ150R-MCWlj5X_wyGLRIRYAA-o8NakJiUq7gOGg\",\"y\":\"dM-GsyJvdDOuALE3l-U9lPL8V3gY_5BPjLH539yTdKU\",\"alg\":\"ES256\",\"crv\":\"P-256\",\"kid\":\"15a5142e-c20f-466e-8132-234dbdae97e7\",\"kty\":\"EC\"}";
+    // Request body example.
+    String body = "{\"foo\":\"bar\"}";
+    // X-Topper-JWS-Signature request header example.
+    String jws = "eyJhbGciOiJFUzI1NiJ9..2H0Ypm5sVzuSpgyZySdAJan05lYxctqhmO8btghFQQzkisvSlNvNWzQ1kqTPXTLP_dR4zQZrTsSsShAK51I4EQ";
+
+    // Example of verifying a webhook request.
+    WebhookVerifier webhookVerifier = new WebhookVerifier(jwk);
+    boolean verified = webhookVerifier.verify(body, jws);
+
+    System.out.printf("Verified: %b", verified);
+  }
+
+  public WebhookVerifier(String jwkStr) throws ParseException {
+    // Parse JWK and convert to a Java key to be used when verifying signatures.
+    jwk = JWK.parse(jwkStr);
+    key = KeyConverter.toJavaKeys(Arrays.asList(new JWK[]{jwk})).get(0);
+  }
+
+  public boolean verify(String requestBody, String jws) {
+    // Parse JWS into a JWS object.
+    JWSObject jwsObject;
+
+    try {
+      jwsObject = JWSObject.parse(jws, new Payload(requestBody));
+    } catch (ParseException e) {
+      return false;
+    }
+
+    // Check if key referenced in the JWS header matches the JWK.
+    JWSHeader jwsHeader = jwsObject.getHeader();
+    JWKMatcher jwsMatcher = JWKMatcher.forJWSHeader(jwsHeader);
+
+    if (!jwsMatcher.matches(jwk)) {
+      return false;
+    }
+
+    // Verify the JWS using the public key.
+    try {
+      JWSVerifier jwsVerifier = new DefaultJWSVerifierFactory().createJWSVerifier(jwsHeader, key);
+
+      return jwsObject.verify(jwsVerifier);
+    } catch (JOSEException e) {
+      return false;
+    }
+  }
 }
 ```
 
