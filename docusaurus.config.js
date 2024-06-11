@@ -42,7 +42,8 @@ const config = {
     },
     prism: {
       darkTheme: darkCodeTheme,
-      theme: lightCodeTheme
+      theme: lightCodeTheme,
+      additionalLanguages: ['java']
     }
   },
   title: 'Topper - Developer docs',
