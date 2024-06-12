@@ -163,6 +163,174 @@ public class WebhookVerifier {
 ```
 
   </TabItem>
+
+  <TabItem label="Golang" value="go">
+
+Here is a golang snippet to verify a signature using the [`github.com/lestrrat-go/jwx/v2`](https://github.com/lestrrat-go/jwx) package. Please note that the code below is for illustrative purposes only, and the integration should be adapted to your application.
+
+```go
+package main
+
+import (
+  "encoding/base64"
+
+  "github.com/lestrrat-go/jwx/v2/jwk"
+  "github.com/lestrrat-go/jwx/v2/jws"
+)
+
+func createWebhookVerifier(key string) (func(body string, sig string) (bool, error), error) {
+  jwkObject, err := jwk.ParseKey([]byte(key))
+
+  if err != nil {
+    return nil, err
+  }
+
+  return func(body, sig string) (bool, error) {
+    header, _, signature, err := jws.SplitCompactString(sig)
+
+    if err != nil {
+      return false, err
+    }
+
+    token := string(header) + "." + (base64.RawStdEncoding.EncodeToString([]byte(body))) + "." + string(signature)
+    _, err = jws.Verify([]byte(token), jws.WithKey(jwkObject.Algorithm(), jwkObject))
+
+    if err != nil {
+      return false, err
+    }
+
+    return true, nil
+  }, nil
+
+}
+
+// JWK public key example supplied by Topper.
+var pubKey = "{\"x\":\"7-INQ150R-MCWlj5X_wyGLRIRYAA-o8NakJiUq7gOGg\",\"y\":\"dM-GsyJvdDOuALE3l-U9lPL8V3gY_5BPjLH539yTdKU\",\"alg\":\"ES256\",\"crv\":\"P-256\",\"kid\":\"15a5142e-c20f-466e-8132-234dbdae97e7\",\"kty\":\"EC\"}"
+
+// Request body example.
+var body = "{\"foo\":\"bar\"}"
+
+// X-Topper-JWS-Signature request header example.
+var topperJwsSig = "eyJhbGciOiJFUzI1NiJ9..2H0Ypm5sVzuSpgyZySdAJan05lYxctqhmO8btghFQQzkisvSlNvNWzQ1kqTPXTLP_dR4zQZrTsSsShAK51I4EQ"
+
+func main() {
+  webhookVerifier, err := createWebhookVerifier(pubKey)
+
+  if err != nil {
+    panic(err)
+  }
+
+  ok, err := webhookVerifier(body, topperJwsSig)
+
+  if err != nil {
+    panic(err)
+  }
+
+  println("Verified:", ok)
+}
+```
+
+  </TabItem>
+
+  <TabItem label="Python" value="python">
+
+Here is a python snippet to verify a signature using the [`python-jose`](https://github.com/mpdavis/python-jose) package. Please note that the code below is for illustrative purposes only, and the integration should be adapted to your application.
+
+```python
+from jose import jwk, jws
+from jose.constants import ALGORITHMS
+from jose.utils import base64url_encode
+import json, base64
+
+# Function that returns a webhook verifier to be reused across requests.
+def createWebhookVerifier(pubJwk):
+  jwkObject = jwk.construct(json.loads(pubJwk))
+
+  def webhookVerifier(body, topperJwsSig):
+    # Replace the payload portion of the JWS for verification.
+    jwsSplited = topperJwsSig.split('.')
+    header, signature = jwsSplited[0], jwsSplited[2]
+    payload = base64url_encode(bytes(body, encoding="utf-8"))
+    
+    token = f"{header}.{payload.decode("utf-8")}.{signature}"
+
+    # Verify the token.
+    try:
+      jws.verify(token, jwkObject.public_key(), ALGORITHMS.ES256)
+    except:
+      return False
+
+    return True
+
+  return webhookVerifier
+
+# JWK public key example supplied by Topper.
+pubJwk = '{"x":"7-INQ150R-MCWlj5X_wyGLRIRYAA-o8NakJiUq7gOGg","y":"dM-GsyJvdDOuALE3l-U9lPL8V3gY_5BPjLH539yTdKU","alg":"ES256","crv":"P-256","kid":"15a5142e-c20f-466e-8132-234dbdae97e7","kty":"EC"}'
+# Request body example.
+body = '{"foo":"bar"}'
+# X-Topper-JWS-Signature request header example.
+topperJwsSig = 'eyJhbGciOiJFUzI1NiJ9..2H0Ypm5sVzuSpgyZySdAJan05lYxctqhmO8btghFQQzkisvSlNvNWzQ1kqTPXTLP_dR4zQZrTsSsShAK51I4EQ'
+
+if __name__ == "__main__": 
+  # Example of verifying a webhook request.
+  verifyWebhook = createWebhookVerifier(pubJwk)
+  verified = verifyWebhook(body, topperJwsSig)
+
+  print('Verified:', verified)
+```
+
+  </TabItem>
+
+  <TabItem label="PHP" value="php">
+
+Here is a php snippet to verify a signature using the [`web-token/jwt-framework`](https://github.com/web-token/jwt-framework) package. Please note that the code below is for illustrative purposes only, and the integration should be adapted to your application.
+
+```php
+<?php
+
+require_once "vendor/autoload.php";
+
+use Base64Url\Base64Url;
+use Jose\Component\Core\JWK;
+use Jose\Component\Core\AlgorithmManager;
+use Jose\Component\Signature\Algorithm\ES256;
+use Jose\Component\Signature\JWSLoader;
+use Jose\Component\Signature\JWSVerifier;
+use Jose\Component\Signature\Serializer\CompactSerializer;
+use Jose\Component\Signature\Serializer\JWSSerializerManager;
+
+function createWebhookVerifier($jwk)
+{
+  $jwkObject = JWK::createFromJson($jwk);
+  $serializerManager = new JWSSerializerManager([new CompactSerializer()]);
+  $jwsVerifier = new JWSVerifier(new AlgorithmManager([new ES256()]));
+
+  return function ($body, $jws) use ($jwkObject, $jwsVerifier, $serializerManager) {
+    // Replace the payload portion of the JWS for verification.
+    $jwsSplited = explode(".", $jws);
+    [$header, $_, $signature] = $jwsSplited;
+    $encodedBody = Base64Url::encode($body);
+    $token = "$header.$encodedBody.$signature";
+
+    return $jwsVerifier->verifyWithKey($serializerManager->unserialize($token), $jwkObject, 0);
+  };
+}
+
+// JWK public key example supplied by Topper.
+$jwk = '{"x":"7-INQ150R-MCWlj5X_wyGLRIRYAA-o8NakJiUq7gOGg","y":"dM-GsyJvdDOuALE3l-U9lPL8V3gY_5BPjLH539yTdKU","alg":"ES256","crv":"P-256","kid":"15a5142e-c20f-466e-8132-234dbdae97e7","kty":"EC"}';
+// Request body example.
+$body = '{"foo":"bar"}';
+// X-Topper-JWS-Signature request header example.
+$jws = 'eyJhbGciOiJFUzI1NiJ9..2H0Ypm5sVzuSpgyZySdAJan05lYxctqhmO8btghFQQzkisvSlNvNWzQ1kqTPXTLP_dR4zQZrTsSsShAK51I4EQ';
+
+// Example of verifying a webhook request.
+$verifyWebhook = createWebhookVerifier($jwk);
+$verified = $verifyWebhook($body, $jws) ? "true" : "false";
+
+echo "Verified: $verified";
+```
+
+  </TabItem>
 </Tabs>
 
 ## Timeouts and failures
