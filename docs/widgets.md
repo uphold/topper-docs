@@ -229,6 +229,233 @@ public class BootstrapTokenSigner {
 ```
 
   </TabItem>
+
+  <TabItem label="Golang" value="go" default>
+
+Here is a golang snippet to generate a **bootstrap token** for the [crypto on-ramp](./flows/crypto-onramp.mdx) flow using the [`github.com/lestrrat-go/jwx/v2`](https://github.com/lestrrat-go/jwx) package. Please note that the code below is for illustrative purposes only, and the integration should be adapted to your application.
+
+```go
+package main
+
+import (
+  "time"
+
+  "github.com/google/uuid"
+  "github.com/lestrrat-go/jwx/v2/jwk"
+  "github.com/lestrrat-go/jwx/v2/jwt"
+)
+
+// Function to create a bootstrap token signer to be reused.
+func createBootstrapTokenSigner(widgetId string, keyId string, key string) (func(claims map[string]interface{}) (string, error), error) {
+  jwkObject, err := jwk.ParseKey([]byte(key))
+
+  if err != nil {
+    return nil, err
+  }
+
+  // Set key id if is it not present in the jwk.
+  if jwkObject.KeyID() == "" {
+    jwkObject.Set("kid", keyId)
+  }
+
+  return func(claims map[string]interface{}) (string, error) {
+    jwtBuilder := jwt.NewBuilder()
+
+    for key, value := range claims {
+      jwtBuilder.Claim(key, value)
+    }
+
+    if _, exists := claims["iat"]; !exists {
+      jwtBuilder.IssuedAt(time.Now())
+    }
+
+    jwtBuilder.Claim("sub", widgetId)
+
+    jwtToken, err := jwtBuilder.Build()
+
+    if err != nil {
+      return "", err
+    }
+
+    b, err := jwt.Sign(jwtToken, jwt.WithKey(jwkObject.Algorithm(), jwkObject))
+
+    if err != nil {
+      return "", err
+    }
+
+    return string(b), nil
+  }, nil
+}
+
+// Widget id example supplied by Topper.
+var widgetId = "d259f6ac-3e8d-46eb-9e6c-c92e138b7660"
+
+// Key id example supplied by Topper.
+var keyId = "c084a85d-c486-4035-9c60-8cec81d8b8f5"
+
+// Private JWK example you generated.
+var pJwk = "{\"alg\":\"ES256\",\"kty\":\"EC\",\"x\":\"dxk0WKKhOyFbU0eZD0plgOB8l9rM-SD5NDgnGpvg99o\",\"y\":\"nIMebHLyyisqfQKkb-bCp6dVNwVqDR3FLA5ZWUZ_yQ8\",\"crv\":\"P-256\",\"d\":\"mdAQEjZBkxtoVeque2wXqebfo1HY0_C2uGApqeKEaX8\"}"
+
+func main() {
+  // Example of creating a bootstrap token.
+  bootstrapTokenSigner, err := createBootstrapTokenSigner(widgetId, keyId, pJwk)
+
+  if err != nil {
+    panic(err)
+  }
+
+  jti, err := uuid.NewUUID()
+
+  if err != nil {
+    panic(err)
+  }
+
+  bootstrapToken, err := bootstrapTokenSigner(map[string]interface{}{
+    "jti": jti.String(),
+    "source": map[string]interface{}{
+      "amount": "100.00",
+      "asset":  "USD",
+    },
+    "target": map[string]interface{}{
+      "address": "0xb794f5ea0ba39494ce839613fffba74279579268",
+      "asset":   "ETH",
+      "network": "ethereum",
+      "label":   "My wallet",
+    },
+  })
+
+  if err != nil {
+    panic(err)
+  }
+
+  println("Bootstrap token:", bootstrapToken)
+}
+```
+
+  </TabItem>
+
+  <TabItem label="Python" value="python" default>
+
+Here is a python snippet to generate a **bootstrap token** for the [crypto on-ramp](./flows/crypto-onramp.mdx) flow using the [`python-jose`](https://github.com/mpdavis/python-jose) package. Please note that the code below is for illustrative purposes only, and the integration should be adapted to your application.
+
+```python
+from jose import jws, jwk
+from jose.constants import ALGORITHMS
+import uuid, json, time
+
+def createBootstrapTokenSigner(widgetId, keyId, pJwk):
+  jwkObject = jwk.construct(json.loads(pJwk))
+
+  def bootstrapTokenSigner(claims: dict):
+    claims["sub"] = widgetId
+
+    if ("iat" not in claims): 
+      claims["iat"] = int(time.time())
+    
+    return jws.sign(claims, jwkObject, { "kid": keyId }, ALGORITHMS.ES256)
+
+  return bootstrapTokenSigner 
+
+# Widget id example supplied by Topper.
+widgetId = 'd259f6ac-3e8d-46eb-9e6c-c92e138b7660'
+# Key id example supplied by Topper.
+keyId = 'c084a85d-c486-4035-9c60-8cec81d8b8f5'
+# Private JWK example you generated.
+pJwk = '{"alg":"ES256","kty":"EC","x":"dxk0WKKhOyFbU0eZD0plgOB8l9rM-SD5NDgnGpvg99o","y":"nIMebHLyyisqfQKkb-bCp6dVNwVqDR3FLA5ZWUZ_yQ8","crv":"P-256","d":"mdAQEjZBkxtoVeque2wXqebfo1HY0_C2uGApqeKEaX8"}'
+
+if __name__ == "__main__":
+  signBootstrapToken = createBootstrapTokenSigner(widgetId, keyId, pJwk)
+  bootstrapToken = signBootstrapToken({
+    "jti": str(uuid.uuid4()),
+    "source": {
+      "amount": "100.00",
+      "asset": "USD"
+    },
+    "target": {
+      "address": "0xb794f5ea0ba39494ce839613fffba74279579268",
+      "asset": "ETH",
+      "network": "ethereum",
+      "label": "My wallet"
+    }
+  }) 
+
+  print('Bootstrap token:', bootstrapToken)
+```
+
+  </TabItem>
+
+<TabItem label="PHP" value="php">
+
+Here is a php snippet to verify a signature using the [`web-token/jwt-framework`](https://github.com/web-token/jwt-framework) package. Please note that the code below is for illustrative purposes only, and the integration should be adapted to your application.
+
+```php
+<?php
+
+require_once "vendor/autoload.php";
+
+use Jose\Component\Core\JWK;
+use Jose\Component\Signature\JWSBuilder;
+use Jose\Component\Core\AlgorithmManager;
+use Jose\Component\Signature\Algorithm\ES256;
+use Jose\Component\Signature\Serializer\CompactSerializer;
+use Ramsey\Uuid\Uuid;
+
+// Function to create a bootstrap token signer to be reused.
+function createBootstrapTokenSigner($widgetId, $keyId, $jwk): callable
+{
+  $jwkObject = JWK::createFromJson($jwk);
+
+  return function ($claims) use ($jwkObject, $widgetId, $keyId) {
+    $builder = new JWSBuilder(new AlgorithmManager([new ES256()]));
+
+    $jwt = $builder
+      ->create()
+      ->withPayload(
+        json_encode(
+          array_merge(
+            ["iat" => time(), "sub" => $widgetId],
+            $claims
+          )
+        )
+      )
+      ->addSignature(
+        $jwkObject,
+        ["alg" => $jwkObject->get("alg"), "kid" => $keyId, "typ" => "JWT"]
+      )
+      ->build();
+
+    // Serialize into a jwt string.
+    return (new CompactSerializer())->serialize($jwt, 0);
+  };
+}
+
+// Widget id example supplied by Topper.
+$widgetId = 'd259f6ac-3e8d-46eb-9e6c-c92e138b7660';
+// Key id example supplied by Topper.
+$keyId = 'c084a85d-c486-4035-9c60-8cec81d8b8f5';
+// Private JWK example you generated.
+$jwk = '{"alg":"ES256","kty":"EC","x":"dxk0WKKhOyFbU0eZD0plgOB8l9rM-SD5NDgnGpvg99o","y":"nIMebHLyyisqfQKkb-bCp6dVNwVqDR3FLA5ZWUZ_yQ8","crv":"P-256","d":"mdAQEjZBkxtoVeque2wXqebfo1HY0_C2uGApqeKEaX8"}';
+
+// Example of creating a bootstrap token.
+$signBootstrapToken = createBootstrapTokenSigner($widgetId, $keyId, $jwk);
+$bootstrapToken = $signBootstrapToken([
+  "jti" => Uuid::uuid4()->toString(),
+  "source" => [
+    "amount" => "100.00",
+    "asset" => "USD"
+  ],
+  "target" => [
+    "address" => "0xb794f5ea0ba39494ce839613fffba74279579268",
+    "asset" => "ETH",
+    "network" => "ethereum",
+    "label" => "My wallet"
+  ]
+]);
+
+echo "Bootstrap token: $bootstrapToken";
+```
+
+  </TabItem>
 </Tabs>
 
 After a **bootstrap token** has been generated, a Topper session can be started by opening a browser window for the end user using Topper's app URL. The **bootstrap token** should be added to the `bt` parameter of the query string.
