@@ -27,6 +27,7 @@ The crypto on-ramp flow allows a user to add funds from a credit or debit card t
   - `paymentMethod` (_optional_): An object configuring the pre-selected payment method.
     - `network`: Payment method network (e.g.: `apple-pay`, `google-pay`, `pix` or `card`).
 - `target` (_optional_): An object configuring recipient wallet.
+  - `allowedAssets` (_optional_): Set of cryptoassets that the user can set as target asset.
   - `amount` (_optional_): Amount the user will receive.
   - `asset`: Cryptoasset the user will receive.
   - `network`: Network of the receiving asset.
@@ -42,6 +43,12 @@ The crypto on-ramp flow allows a user to add funds from a credit or debit card t
 At least one of `source.amount` or `target.amount` _must_ be provided, but not both.
 
 The supported values for `source.asset`, `target.asset`, `target.network`, `target.tag` and `target.priority` can be found using our [REST API](../rest-api.md), via the [assets endpoint](https://api.topperpay.com/assets/crypto-onramp).
+:::
+
+:::caution
+If `target.allowedAssets` is set, and you define `target.asset` with an asset that is not allowed, the bootstrap will fail.
+
+If `target.allowedAssets` is set and `target.asset` is not, the `target.asset` will default to the first asset on `target.allowedAssets`.
 :::
 
 :::caution
@@ -73,6 +80,7 @@ We recommend that you use `XRP` for testing purposes when integrating Topper sin
     }
   },
   "target": {
+    "allowedAssets": ["BTC", "ETH", "XRP"]
     "address": "0xb794f5ea0ba39494ce839613fffba74279579268",
     "asset": "ETH",
     "network": "ethereum",
