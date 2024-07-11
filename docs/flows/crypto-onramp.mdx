@@ -507,6 +507,8 @@ Triggered when a user's order has failed.
   - `id` UUID of the widget.
   - `name`: Name of the widget.
   - `flow`: Flow associated with the widget.
+- `error`: Indicates specific error information.
+  - `reason`: Indicates the reason for the error, possible values are `fraud`.
 
 :::note
 The values for `origin.paymentMethod.type` can be found using our [REST API](../rest-api.md), via the [payment methods endpoint](https://api.topperpay.com/payment-methods/crypto-onramp).
@@ -565,6 +567,9 @@ The values for `origin.paymentMethod.type` can be found using our [REST API](../
       "id": "998544f2-5b01-4062-9394-22827ff5db6c",
       "name": "ACME",
       "flow": "crypto_onramp"
+    }
+    "error": {
+      "reason": "fraud"
     }
     // highlight-end
   }
