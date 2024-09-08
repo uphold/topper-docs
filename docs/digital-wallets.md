@@ -6,7 +6,7 @@ sidebar_position: 8
 
 **Does Topper support Apple and Google Pay?**
 
-Yes.
+Yes, and currently only on `crypto_onramp` flow.
 
 **What are the benefits of using Apple and Google Pay?**
 
