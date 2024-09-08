@@ -24,13 +24,26 @@ A webhook request will include the following data:
 
 Full information about the available events and their associated payloads can be found on the associated **Flows** page.
 
-| Flow | Event | Trigger |
-| - | - | - |
-| [crypto_onramp](./flows/crypto-onramp.mdx) | [`order:crypto-onramp:committed`](./flows/crypto-onramp.mdx#ordercrypto-onrampcommitted) | User placed an order. |
-| [crypto_onramp](./flows/crypto-onramp.mdx) | [`order:crypto-onramp:charged`](./flows/crypto-onramp.mdx#ordercrypto-onrampcharged) | User has been charged for their order. |
-| [crypto_onramp](./flows/crypto-onramp.mdx) | [`order:crypto-onramp:completed`](./flows/crypto-onramp.mdx#ordercrypto-onrampcompleted) | User's order has completed. |
-| [crypto_onramp](./flows/crypto-onramp.mdx) | [`order:crypto-onramp:failed`](./flows/crypto-onramp.mdx#ordercrypto-onrampfailed) | User's order has failed. |
-| [crypto_onramp](./flows/crypto-onramp.mdx) | [`order:crypto-onramp:refund:completed`](./flows/crypto-onramp.mdx#ordercrypto-onramprefundcompleted) | User's order has been successfully refunded. |
+### Onramp flow
+
+| Event | Trigger |
+| - | - |
+| [`order:crypto-onramp:committed`](./flows/crypto-onramp.mdx#ordercrypto-onrampcommitted) | User placed an order. |
+| [`order:crypto-onramp:charged`](./flows/crypto-onramp.mdx#ordercrypto-onrampcharged) | User has been charged for their order. |
+| [`order:crypto-onramp:completed`](./flows/crypto-onramp.mdx#ordercrypto-onrampcompleted) | User's order has completed. |
+| [`order:crypto-onramp:failed`](./flows/crypto-onramp.mdx#ordercrypto-onrampfailed) | User's order has failed. |
+| [`order:crypto-onramp:refund:completed`](./flows/crypto-onramp.mdx#ordercrypto-onramprefundcompleted) | User's order has been successfully refunded. |
+
+### Offramp flow
+
+| Event | Trigger |
+| - | - |
+| [`order:crypto-offramp:committed`](./flows/crypto-offramp.mdx#ordercrypto-offrampcommitted) | User placed an order. |
+| [`order:crypto-offramp:funds-sent`](./flows/crypto-offramp.mdx#ordercrypto-offrampfunds-sent) | User has sent funds for their order. |
+| [`order:crypto-offramp:funds-received`](./flows/crypto-offramp.mdx#ordercrypto-offrampfunds-received) | User has sent funds for their order and we have received them. |
+| [`order:crypto-offramp:completed`](./flows/crypto-offramp.mdx#ordercrypto-offrampcompleted) | User's order has completed. |
+| [`order:crypto-offramp:failed`](./flows/crypto-offramp.mdx#ordercrypto-offrampfailed) | User's order has failed. |
+| [`order:crypto-offramp:refund:completed`](./flows/crypto-offramp.mdx#ordercrypto-offramprefundcompleted) | User's order has been successfully refunded. |
 
 ## Verifying a request
 
