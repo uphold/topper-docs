@@ -1,0 +1,595 @@
+---
+sidebar_position: 2
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Crypto off-ramp
+
+The crypto off-ramp flow allows a user to sell cryptocurrency and convert it into fiat, which can then be transferred to their linked debit cards.
+
+## Bootstrap token payload
+
+<Tabs>
+  <TabItem label="Schema" value="schema" default>
+
+- `partner` (_optional_): Partner object.
+  - `continueUrl` (_optional_): URL to redirect the user to after the order is placed and the funds were received.
+  - `continueUrlTarget` (_optional_): In which tab should the `continueUrl` be opened.
+    - `new-tab`: Open in a new tab.
+    - `same-tab`: Open in the same tab or iframe (default).
+    - `parent-tab`: Useful only in an iframe: open in the tab that contains the iframe.
+  - `displayName` (_optional_): Partner name to be displayed to the user.
+  - `fee` (_optional_): An object configuring the partner fee to be charged.
+    - `percentage`: Percentage of the total source amount (the maximum allowed value is "5").
+- `refund` (_optional_): An object configuring the refund details. The asset and network of the refund will be the same as the source asset and network.
+  - `address`: Address to which the refund will be sent.
+  - `tag` (_optional_): Tag of the crypto transaction, used to complement the `address`.
+    - `type`: Tag type (e.g.: `memo` or `destination-tag`).
+    - `value`: Tag value.
+  - `priority` (_optional_): Priority of the crypto transaction (e.g.: `fast` will enable instant send for `Dash` transactions). Defaults to `normal`.
+- `source` (_optional_): An object configuring the asset and amount to be sold.
+  - `allowedAssets` (_optional_): Set of cryptoassets that the user can set as source asset.
+  - `amount` (_optional_): Amount to be sold.
+  - `asset`: Cryptoasset the user will send.
+  - `editMode` (_optional_): Controls what values the user can change on the widget.
+    - `all-editable`: The user can change `amount`, `asset` and `network` on the widget. (default)
+    - `only-amount`: The user can only change the amount on the widget.
+  - `network` (_optional_): Network of the receiving asset.
+  - `walletSendUrl` (_optional_): URL to redirect the user to send the crypto from their wallet.
+  - `walletSendUrlTarget` (_optional_): In which tab should the `walletSendUrl` be opened.
+    - `new-tab`: Open in a new tab.
+    - `same-tab`: Open in the same tab or iframe (default).
+    - `parent-tab`: Useful only in an iframe: open in the tab that contains the iframe.
+- `target` (_optional_): An object configuring the amount and asset to be paid.
+  - `amount` (_optional_): Amount the user will receive.
+  - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to receive the funds.
+
+:::note
+At least one of `source.amount` or `target.amount` _must_ be provided, but not both.
+
+The supported values for `target.asset`, `source.asset`, `source.network`, `source.tag` can be found using our [REST API](../rest-api.md), via the [assets endpoint](https://api.topperpay.com/assets/crypto-offramp).
+:::
+
+:::caution
+If `source.allowedAssets` is set, and you define `source.asset` with an asset that is not allowed, the bootstrap will fail.
+
+If `source.allowedAssets` is set and `source.asset` is not, the `source.asset` will default to the first asset on `source.allowedAssets`.
+:::
+
+:::caution
+In the `sandbox` environment, Topper has limited funds on testnets. If you make an order that needs to be refunded using an asset we have no funds for, the order will be stuck indefinitely trying to create the blockchain transaction.
+We recommend that you use `XRP` for testing purposes when integrating Topper since we have a larger quantity of them. If you prefer to test with another asset and network, please reach out to us beforehand so that we can guarantee funds on our pool and give you a smoother integration experience.
+:::
+
+  </TabItem>
+  <TabItem label="Example" value="example">
+
+```js
+{
+  "iat": 1679538023,
+  "jti": "4b552af1-1592-42f8-bbc9-dac28e2b4000",
+  "sub": "b9fe022b-f436-49e1-bb89-6f2e8eabf336",
+  // highlight-start
+  "partner": {
+    "continueUrl": "https://example.com",
+    "continueUrlTarget": "new-tab",
+    "displayName": "ACME",
+    "fee": {
+      "percentage": "1"
+    }
+  },
+  "refund": {
+    "address": "0xb794f5ea0ba39494ce839613fffba74279579268",
+    "priority": "normal"
+    "tag": {
+      "type": "memo",
+      "value": "123456"
+    }
+  },
+  "source": {
+    "allowedAssets": [
+      "BTC",
+      {
+        "asset": "ETH",
+        "networks": [ "ethereum", "arbitrum" ]
+      },
+      { "asset": "XRP" }
+    ]
+    "amount": "1",
+    "asset": "ETH",
+    "editMode": "all-editable",
+    "network": "ethereum",
+    "walletSendUrl": "https://example.com",
+    "walletSendUrlTarget": "new-tab"
+  },
+  "target": {
+    "asset": "USD",
+  }
+  // highlight-end
+}
+```
+
+  </TabItem>
+</Tabs>
+
+## Events
+
+### `order:crypto-offramp:committed`
+
+Triggered when a user has placed an order.
+
+<Tabs>
+  <TabItem label="Schema" value="schema" default>
+
+- `id`: UUID of the order.
+- `status`: Status of the order (`processing`).
+- `createdAt`: Timestamp at which the order was created.
+- `updatedAt`: Timestamp at which the order was last updated.
+- `origin`: Object containing information about what the user will send.
+  - `amount`: Amount the user will send.
+  - `rate`: Rate used to calculate the amount.
+  - `asset`: Cryptoasset the user will send.
+  - `network`: Network of the sending asset.
+- `destination`: Object containing information about what the user will receive.
+  - `amount`: Amount the user will receive.
+  - `rate`: Rate used to calculate the amount.
+  - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to receive the funds.
+  - `paymentMethod`: Object containing information about the payment method used.
+    - `type`: Type of payment method.
+- `fees`: Array containing fees associated with the order.
+  - `amount`: Amount user was charged for this fee.
+  - `asset`: Asset used to charge the fee.
+  - `normalized`: Amount in USD that the user was charged for this fee.
+  - `type`: Type of fee (`network`, `deposit` or `partner`).
+- `widget`: Widget associated with the session.
+  - `id` UUID of the widget.
+  - `name`: Name of the widget.
+  - `flow`: Flow associated with the widget.
+
+:::note
+The values for `destination.paymentMethod.type` can be found using our [REST API](../rest-api.md), via the [payment methods endpoint](https://api.topperpay.com/payment-methods/crypto-offramp).
+:::
+
+  </TabItem>
+  <TabItem label="Example" value="example">
+
+```js
+{
+  "name": "order:crypto-offramp:committed",
+  "id": "00a991cf-a870-43af-88b8-43c51532831d",
+  "bootstrapTokenId": "141bfa06-481e-4684-96eb-cec4ad529616",
+  "data": {
+    // highlight-start
+    "id": "966b8e24-6a65-442a-942e-577f16288789",
+    "status": "processing",
+    "createdAt": "2023-06-12T17:21:21.240Z",
+    "updatedAt": "2023-06-12T17:21:21.240Z",
+    "origin": {
+      "amount": "0.047116964221968237",
+      "rate": "0.00056488387749632223",
+      "asset": "ETH",
+      "network": "ethereum"
+    },
+    "destination": {
+      "amount": "100.00",
+      "rate": "1770.27534301775263314892",
+      "asset": "USD",
+      "paymentMethod": {
+        "type": "credit-card"
+      }
+    },
+    "fees": [
+      {
+        "amount": "2.42",
+        "asset": "USD",
+        "normalized": "2.42",
+        "type": "deposit"
+      },
+      {
+        "amount": "1.00",
+        "asset": "USD",
+        "normalized": "1.00",
+        "type": "partner"
+      }
+    ],
+    "widget": {
+      "id": "998544f2-5b01-4062-9394-22827ff5db6c",
+      "name": "ACME",
+      "flow": "crypto_offramp"
+    }
+    // highlight-end
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+### `order:crypto-offramp:funds-received`
+
+Triggered when a user has sent funds for their order and we have received them.
+
+<Tabs>
+  <TabItem label="Schema" value="schema" default>
+
+- `id`: UUID of the order.
+- `status`: Status of the order (`processing`).
+- `createdAt`: Timestamp at which the order was created.
+- `updatedAt`: Timestamp at which the order was last updated.
+- `origin`: Object containing information about what the user sent.
+  - `amount`: Amount the user sent.
+  - `rate`: Rate used to calculate the amount.
+  - `asset`: Cryptoasset the user sent.
+  - `network`: Network of the sending asset.
+- `destination`: Object containing information about what the user will receive.
+  - `amount`: Amount the user will receive.
+  - `rate`: Rate used to calculate the amount.
+  - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to receive the funds.
+  - `paymentMethod`: Object containing information about the payment method used.
+    - `type`: Type of payment method.
+- `fees`: Array containing fees associated with the order.
+  - `amount`: Amount user was charged for this fee.
+  - `asset`: Asset used to charge the fee.
+  - `normalized`: Amount in USD that the user was charged for this fee.
+  - `type`: Type of fee (`network`, `deposit` or `partner`).
+- `widget`: Widget associated with the session.
+  - `id` UUID of the widget.
+  - `name`: Name of the widget.
+  - `flow`: Flow associated with the widget.
+
+:::note
+The values for `destination.paymentMethod.type` can be found using our [REST API](../rest-api.md), via the [payment methods endpoint](https://api.topperpay.com/payment-methods/crypto-offramp).
+:::
+
+  </TabItem>
+  <TabItem label="Example" value="example">
+
+```js
+{
+  "name": "order:crypto-offramp:funds-received",
+  "id": "00a991cf-a870-43af-88b8-43c51532831d",
+  "bootstrapTokenId": "141bfa06-481e-4684-96eb-cec4ad529616",
+  "data": {
+    // highlight-start
+    "id": "966b8e24-6a65-442a-942e-577f16288789",
+    "status": "processing",
+    "createdAt": "2023-06-12T17:21:21.240Z",
+    "updatedAt": "2023-06-12T17:21:21.240Z",
+    "origin": {
+      "amount": "0.047116964221968237",
+      "rate": "0.00056488387749632223",
+      "asset": "ETH",
+      "network": "ethereum"
+    },
+    "destination": {
+      "amount": "100.00",
+      "rate": "1770.27534301775263314892",
+      "asset": "USD",
+      "paymentMethod": {
+        "type": "credit-card"
+      }
+    },
+    "fees": [
+      {
+        "amount": "2.42",
+        "asset": "USD",
+        "normalized": "2.42",
+        "type": "deposit"
+      },
+      {
+        "amount": "1.00",
+        "asset": "USD",
+        "normalized": "1.00",
+        "type": "partner"
+      }
+    ],
+    "widget": {
+      "id": "998544f2-5b01-4062-9394-22827ff5db6c",
+      "name": "ACME",
+      "flow": "crypto_offramp"
+    }
+    // highlight-end
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+### `order:crypto-offramp:completed`
+
+Triggered when a user's order has completed.
+
+<Tabs>
+  <TabItem label="Schema" value="schema" default>
+
+- `id`: UUID of the order.
+- `status`: Status of the order (`completed`).
+- `createdAt`: Timestamp at which the order was created.
+- `updatedAt`: Timestamp at which the order was last updated.
+- `origin`: Object containing information about what the user sent.
+  - `amount`: Amount the user sent.
+  - `rate`: Rate used to calculate the amount.
+  - `asset`: Cryptoasset the user sent.
+  - `network`: Network of the sending asset.
+- `destination`: Object containing information about what the user received.
+  - `amount`: Amount the user received.
+  - `rate`: Rate used to calculate the amount.
+  - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to receive the funds.
+  - `paymentMethod`: Object containing information about the payment method used.
+    - `type`: Type of payment method.
+- `fees`: Array containing fees associated with the order.
+  - `amount`: Amount user was charged for this fee.
+  - `asset`: Asset used to charge the fee.
+  - `normalized`: Amount in USD that the user was charged for this fee.
+  - `type`: Type of fee (`network`, `deposit` or `partner`).
+- `widget`: Widget associated with the session.
+  - `id` UUID of the widget.
+  - `name`: Name of the widget.
+  - `flow`: Flow associated with the widget.
+
+:::note
+The values for `destination.paymentMethod.type` can be found using our [REST API](../rest-api.md), via the [payment methods endpoint](https://api.topperpay.com/payment-methods/crypto-offramp).
+:::
+
+  </TabItem>
+  <TabItem label="Example" value="example">
+
+```js
+{
+  "name": "order:crypto-offramp:completed",
+  "id": "00a991cf-a870-43af-88b8-43c51532831d",
+  "bootstrapTokenId": "141bfa06-481e-4684-96eb-cec4ad529616",
+  "data": {
+    // highlight-start
+    "id": "966b8e24-6a65-442a-942e-577f16288789",
+    "status": "processing",
+    "createdAt": "2023-06-12T17:21:21.240Z",
+    "updatedAt": "2023-06-12T17:21:21.240Z",
+    "origin": {
+      "amount": "0.047116964221968237",
+      "rate": "0.00056488387749632223",
+      "asset": "ETH",
+      "network": "ethereum"
+    },
+    "destination": {
+      "amount": "100.00",
+      "rate": "1770.27534301775263314892",
+      "asset": "USD",
+      "paymentMethod": {
+        "type": "credit-card"
+      }
+    },
+    "fees": [
+      {
+        "amount": "2.42",
+        "asset": "USD",
+        "normalized": "2.42",
+        "type": "deposit"
+      },
+      {
+        "amount": "1.00",
+        "asset": "USD",
+        "normalized": "1.00",
+        "type": "partner"
+      }
+    ],
+    "widget": {
+      "id": "998544f2-5b01-4062-9394-22827ff5db6c",
+      "name": "ACME",
+      "flow": "crypto_offramp"
+    }
+    // highlight-end
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+### `order:crypto-offramp:failed`
+
+Triggered when a user's order has failed.
+
+<Tabs>
+  <TabItem label="Schema" value="schema" default>
+
+- `id`: UUID of the order.
+- `status`: Status of the order (`failed`).
+- `createdAt`: Timestamp at which the order was created.
+- `updatedAt`: Timestamp at which the order was last updated.
+- `origin`: Object containing information about what the user sent.
+  - `amount`: Amount the user sent.
+  - `rate`: Rate used to calculate the amount.
+  - `asset`: Cryptoasset the user sent.
+  - `network`: Network of the sending asset.
+- `destination`: Object containing information about what the user would have received.
+  - `amount`: Amount the user would have received.
+  - `rate`: Rate used to calculate the amount.
+  - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to receive the funds.
+  - `paymentMethod`: Object containing information about the payment method used.
+    - `type`: Type of payment method.
+- `fees`: Array containing fees associated with the order.
+  - `amount`: Amount user was charged for this fee.
+  - `asset`: Asset used to charge the fee.
+  - `normalized`: Amount in USD that the user was charged for this fee.
+  - `type`: Type of fee (`network`, `deposit` or `partner`).
+- `widget`: Widget associated with the session.
+  - `id` UUID of the widget.
+  - `name`: Name of the widget.
+  - `flow`: Flow associated with the widget.
+- `error`: Indicates specific error information.
+  - `reason`: Indicates the reason for the error, possible values are `fraud`.
+
+:::note
+The values for `destination.paymentMethod.type` can be found using our [REST API](../rest-api.md), via the [payment methods endpoint](https://api.topperpay.com/payment-methods/crypto-offramp).
+:::
+
+  </TabItem>
+  <TabItem label="Example" value="example">
+
+```js
+{
+  "name": "order:crypto-offramp:failed",
+  "id": "00a991cf-a870-43af-88b8-43c51532831d",
+  "bootstrapTokenId": "141bfa06-481e-4684-96eb-cec4ad529616",
+  "data": {
+    // highlight-start
+    "id": "966b8e24-6a65-442a-942e-577f16288789",
+    "status": "failed",
+    "createdAt": "2023-06-12T17:21:21.240Z",
+    "updatedAt": "2023-06-12T17:21:21.240Z",
+    "origin": {
+      "amount": "0.047116964221968237",
+      "rate": "0.00056488387749632223",
+      "asset": "ETH",
+      "network": "ethereum"
+    },
+    "destination": {
+      "amount": "100.00",
+      "rate": "1770.27534301775263314892",
+      "asset": "USD",
+      "paymentMethod": {
+        "type": "credit-card"
+      }
+    },
+    "fees": [
+      {
+        "amount": "2.42",
+        "asset": "USD",
+        "normalized": "2.42",
+        "type": "deposit"
+      },
+      {
+        "amount": "1.00",
+        "asset": "USD",
+        "normalized": "1.00",
+        "type": "partner"
+      }
+    ],
+    "widget": {
+      "id": "998544f2-5b01-4062-9394-22827ff5db6c",
+      "name": "ACME",
+      "flow": "crypto_offramp"
+    },
+    "error": {
+      "reason": "fraud"
+    }
+    // highlight-end
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+### `order:crypto-offramp:refund:completed`
+
+Triggered when a user's order has been successfully refunded.
+
+<Tabs>
+  <TabItem label="Schema" value="schema" default>
+
+- `id`: UUID of the order.
+- `status`: Status of the order (`failed`).
+- `createdAt`: Timestamp at which the order was created.
+- `updatedAt`: Timestamp at which the order was last updated.
+- `origin`: Object containing information about what the user sent.
+  - `amount`: Amount the user sent.
+  - `rate`: Rate used to calculate the amount.
+  - `asset`: Cryptoasset the user sent.
+  - `network`: Network of the sending asset.
+- `destination`: Object containing information about what the user would have received.
+  - `amount`: Amount the user would have received.
+  - `rate`: Rate used to calculate the amount.
+  - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to receive the funds.
+  - `paymentMethod`: Object containing information about the payment method used.
+    - `type`: Type of payment method.
+- `fees`: Array containing fees associated with the order.
+  - `amount`: Amount user was charged for this fee.
+  - `asset`: Asset used to charge the fee.
+  - `normalized`: Amount in USD that the user was charged for this fee.
+  - `type`: Type of fee (`network`, `deposit` or `partner`).
+- `refund`: Object containing information about how much was refunded to the user.
+  - `amount`: Amount the user received.
+  - `rate`: Rate used to calculate the amount.
+  - `asset`: Cryptoasset the user received.
+  - `network`: Network of the receiving asset.
+  - `address`: User's wallet address to receive funds.
+  - `priority`: Priority of the crypto transaction.
+  - `tag`: Tag of the crypto transaction, used to complement the `address`.
+    - `type`: Tag type (e.g.: `memo` or `destination-tag`).
+    - `value`: Tag value.
+- `widget`: Widget associated with the session.
+  - `id` UUID of the widget.
+  - `name`: Name of the widget.
+  - `flow`: Flow associated with the widget.
+
+:::note
+The values for `destination.paymentMethod.type` can be found using our [REST API](../rest-api.md), via the [payment methods endpoint](https://api.topperpay.com/payment-methods/crypto-offramp).
+:::
+
+  </TabItem>
+  <TabItem label="Example" value="example">
+
+```js
+{
+  "name": "order:crypto-offramp:refund:completed",
+  "id": "00a991cf-a870-43af-88b8-43c51532831d",
+  "bootstrapTokenId": "141bfa06-481e-4684-96eb-cec4ad529616",
+  "data": {
+    // highlight-start
+    "id": "966b8e24-6a65-442a-942e-577f16288789",
+    "status": "failed",
+    "createdAt": "2023-06-12T17:21:21.240Z",
+    "updatedAt": "2023-06-12T17:21:21.240Z",
+    "origin": {
+      "amount": "0.047116964221968237",
+      "rate": "0.00056488387749632223",
+      "asset": "ETH",
+      "network": "ethereum"
+    },
+    "destination": {
+      "amount": "100.00",
+      "rate": "1770.27534301775263314892",
+      "asset": "USD",
+      "paymentMethod": {
+        "type": "credit-card"
+      }
+    },
+    "fees": [
+      {
+        "amount": "2.42",
+        "asset": "USD",
+        "normalized": "2.42",
+        "type": "deposit"
+      },
+      {
+        "amount": "1.00",
+        "asset": "USD",
+        "normalized": "1.00",
+        "type": "partner"
+      }
+    ],
+    "refund": {
+      "amount": "0.047116964221968237",
+      "rate": "0.00056488387749632223",
+      "asset": "ETH",
+      "network": "ethereum",
+      "address": "0xb794F5eA0ba39494cE839613fffBA74279579268",
+      "priority": "normal"
+    },
+    "widget": {
+      "id": "998544f2-5b01-4062-9394-22827ff5db6c",
+      "name": "ACME",
+      "flow": "crypto_offramp"
+    }
+    // highlight-end
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
