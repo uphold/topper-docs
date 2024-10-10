@@ -19,24 +19,35 @@ If you face issues initializing Topper and see a 'something went wrong' error pa
 
 You can bypass email authentication and phone verification codes by typing `000000`.
 
-### Credit cards
+### Cards
 
-The following card details can be used to force specific outcomes:
+The following card details can be used to force specific outcomes when creating accounts:
 
-| Card number      | Outcome                 |
-|------------------|-------------------------|
-| 4921817844445119 | `success`               |
-| 4312810406702461 | `card_unauthorized`     |
-| 4414745735532923 | `card_declined_by_bank` |
-| 4916426384864999 | `request_data_invalid`  |
-| 4086439018748730 | `card_expired`          |
-| 4532942248840268 | `card_unsupported`      |
-| 4929216735379028 | `insufficient_funds`    |
-| 4748972091871094 | `amount_invalid`        |
-| 4916526184701927 | `velocity`              |
+| Card number      | Outcome                 | Type   | Country | Brand      |
+|------------------|-------------------------|--------|---------|------------|
+| 5318773012490080 | `success`               | debit  | US      | MasterCard |
+| 4748972091871094 | `amount_invalid`        | debit  | US      | Visa       |
+| 4818924250131070 | `card_unauthorized`     | debit  | GB      | Visa       |
+| 4407108123937239 | `card_unauthorized`     | credit | GB      | Visa       |
+| 4414745735532923 | `card_declined_by_bank` | credit | US      | Visa       |
+| 5148447461737269 | `card_declined_by_bank` | debit  | US      | MasterCard |
+| 4086439018748730 | `card_expired`          | credit | US      | Visa       |
+| 4695070264707089 | `card_expired`          | debit  | US      | Visa       |
+| 4532942248840268 | `card_unsupported`      | credit | AD      | Visa       |
+| 4472010538259482 | `card_unsupported`      | debit  | US      | Visa       |
+| 4916426384864999 | `request_data_invalid`  | credit | US      | Visa       |
+| 4648778096000816 | `request_data_invalid`  | debit  | US      | Visa       |
+| 4929216735379028 | `insufficient_funds`    | credit | MT      | Visa       |
+| 4247318851058116 | `insufficient_funds`    | debit  | US      | Visa       |
+| 4916526184701927 | `velocity`              | credit | AE      | Visa       |
+| 4467625019643180 | `velocity`              | debit  | US      | Visa       |
 
 :::tip
 When using the above card numbers, Topper will accept any value for the expiry date and CVV.
+:::
+
+:::caution
+In the `crypto_offramp` flow, only `debit` cards that match the user's country of residence will be accepted.
 :::
 
 ## Production
