@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 ## Creating a widget {#creating-widget}
 
-As a business customer, you may have one or more widgets which will allow your end users to interact with Topper. A widget is associated with one of the flows supported by Topper — currently [crypto on-ramp](./flows/crypto-onramp.mdx) is the only supported flow.
+As a business customer, you may have one or more widgets which will allow your end users to interact with Topper. A widget is associated with one of the flows supported by Topper — [crypto on-ramp](./flows/crypto-onramp.mdx) or [crypto off-ramp](./flows/crypto-offramp.mdx).
 
 Each widget has its own:
 
@@ -501,6 +501,52 @@ topper.initialize({ bootstrapToken: <bootstrap token> });
 </Tabs>
 
 In order to prevent social and replay attacks, a **bootstrap token** will only be valid for 3 minutes after its issue time (from the `iat` claim). A **bootstrap token** may only be used to create a session one time, any subsequent attempts to create a session with the same token will be rejected.
+
+## Initiating multiple sessions {#initiate-multiple-sessions}
+
+To allow both crypto onramp and crypto offramp flows to be available when Topper is initialized, you can initialize multiple sessions by providing multiple **bootstrap tokens**.
+
+<Tabs>
+  <TabItem label="Sandbox" value="sandbox" default>
+
+```
+https://app.sandbox.topperpay.com/?bt=<crypto_onramp_bootstrap_token>;<crypto_offramp_bootstrap_token>
+```
+
+  </TabItem>
+  <TabItem label="Production" value="production" default>
+
+```
+https://app.topperpay.com/?bt=<crypto_onramp_bootstrap_token>;<crypto_offramp_bootstrap_token>
+```
+
+  </TabItem>
+</Tabs>
+
+Using the [Web SDK](./web-sdk.md):
+
+<Tabs>
+  <TabItem label="Sandbox" value="sandbox" default>
+
+```
+const topper = new TopperWebSdk({ environment: TOPPER_ENVIRONMENTS.SANDBOX });
+
+topper.initialize({ bootstrapTokens: [<crypto_onramp bootstrap token>, <crypto_offramp bootstrap token>] });
+```
+
+  </TabItem>
+  <TabItem label="Production" value="production" default>
+
+```
+const topper = new TopperWebSdk();
+
+topper.initialize({ bootstrapTokens: [<crypto_onramp bootstrap token>, <crypto_offramp bootstrap token>] });
+```
+
+  </TabItem>
+</Tabs>
+
+By default, the widget will use the first **bootstrap token** passed in the URL as the **active** flow. However, an optional `active_flow` parameter in the URL or `activeFlow` configuration option in the [Web SDK](./web-sdk.md) can be used to explicitly set which flow is active on initialization. The available options are `crypto_onramp` and `crypto_offramp`. 
 
 ## A note about security {#a-note-about-security}
 
