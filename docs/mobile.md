@@ -14,7 +14,7 @@ When embedding on a **WebView**, please ensure the following steps have been com
 
 ## Cloudflare Turnstile
 
-We use **Clouflare Turnstile** to confirm users are real and to block unwanted bots without slowing down the experience. Please be sure to follow these [Webview configurations](https://developers.cloudflare.com/turnstile/get-started/mobile-implementation/#webview-configurations), [update the allowed origins](https://developers.cloudflare.com/turnstile/get-started/mobile-implementation/#update-allowed-origins) to include `challenges.cloudflare.com, about:blank, about:srcdoc`, and enable `https` and `http` connections.
+We use **Cloudflare Turnstile** to confirm users are real and to block unwanted bots without slowing down the experience. Please be sure to follow these [Webview configurations](https://developers.cloudflare.com/turnstile/get-started/mobile-implementation/#webview-configurations), [update the allowed origins](https://developers.cloudflare.com/turnstile/get-started/mobile-implementation/#update-allowed-origins) to include `challenges.cloudflare.com, about:blank, about:srcdoc`, and enable `https` and `http` connections.
 
 If you use the `react-native-webview` package, update your **WebView** `originWhitelist` to `originWhitelist={['https://*', 'http://*', 'about:blank', 'about:srcdoc']}`.
 
