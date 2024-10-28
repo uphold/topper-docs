@@ -207,6 +207,97 @@ The values for `destination.paymentMethod.type` can be found using our [REST API
   </TabItem>
 </Tabs>
 
+### `order:crypto-offramp:funds-sent`
+
+Triggered when a user has sent funds for their order.
+
+<Tabs>
+  <TabItem label="Schema" value="schema" default>
+
+- `id`: UUID of the order.
+- `status`: Status of the order (`processing`).
+- `createdAt`: Timestamp at which the order was created.
+- `updatedAt`: Timestamp at which the order was last updated.
+- `origin`: Object containing information about what the user sent.
+  - `amount`: Amount the user sent.
+  - `rate`: Rate used to calculate the amount.
+  - `asset`: Cryptoasset the user sent.
+  - `network`: Network of the sending asset.
+- `destination`: Object containing information about what the user will receive.
+  - `amount`: Amount the user will receive.
+  - `rate`: Rate used to calculate the amount.
+  - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to receive the funds.
+  - `paymentMethod`: Object containing information about the payment method used.
+    - `type`: Type of payment method.
+- `fees`: Array containing fees associated with the order.
+  - `amount`: Amount user was charged for this fee.
+  - `asset`: Asset used to charge the fee.
+  - `normalized`: Amount in USD that the user was charged for this fee.
+  - `type`: Type of fee (`network`, `deposit` or `partner`).
+- `widget`: Widget associated with the session.
+  - `id` UUID of the widget.
+  - `name`: Name of the widget.
+  - `flow`: Flow associated with the widget.
+
+:::note
+The values for `destination.paymentMethod.type` can be found using our [REST API](../rest-api.md), via the [payment methods endpoint](https://api.topperpay.com/payment-methods/crypto-offramp).
+:::
+
+  </TabItem>
+  <TabItem label="Example" value="example">
+
+```js
+{
+  "name": "order:crypto-offramp:funds-sent",
+  "id": "00a991cf-a870-43af-88b8-43c51532831d",
+  "bootstrapTokenId": "141bfa06-481e-4684-96eb-cec4ad529616",
+  "data": {
+    // highlight-start
+    "id": "966b8e24-6a65-442a-942e-577f16288789",
+    "status": "processing",
+    "createdAt": "2023-06-12T17:21:21.240Z",
+    "updatedAt": "2023-06-12T17:21:21.240Z",
+    "origin": {
+      "amount": "0.047116964221968237",
+      "rate": "0.00056488387749632223",
+      "asset": "ETH",
+      "network": "ethereum"
+    },
+    "destination": {
+      "amount": "100.00",
+      "rate": "1770.27534301775263314892",
+      "asset": "USD",
+      "paymentMethod": {
+        "type": "credit-card"
+      }
+    },
+    "fees": [
+      {
+        "amount": "2.42",
+        "asset": "USD",
+        "normalized": "2.42",
+        "type": "deposit"
+      },
+      {
+        "amount": "1.00",
+        "asset": "USD",
+        "normalized": "1.00",
+        "type": "partner"
+      }
+    ],
+    "widget": {
+      "id": "998544f2-5b01-4062-9394-22827ff5db6c",
+      "name": "ACME",
+      "flow": "crypto_offramp"
+    }
+    // highlight-end
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
 ### `order:crypto-offramp:funds-received`
 
 Triggered when a user has sent funds for their order and we have received them.
