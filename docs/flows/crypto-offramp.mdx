@@ -83,10 +83,6 @@ We recommend that you use `XRP` for testing purposes when integrating Topper sin
   "refund": {
     "address": "0xb794f5ea0ba39494ce839613fffba74279579268",
     "priority": "normal"
-    "tag": {
-      "type": "memo",
-      "value": "123456"
-    }
   },
   "source": {
     "allowedAssets": [
@@ -132,6 +128,13 @@ Triggered when a user has placed an order.
   - `rate`: Rate used to calculate the amount.
   - `asset`: Cryptoasset the user will send.
   - `network`: Network of the sending asset.
+  - `depositAddress`: Object containing information related to the deposit.
+    - `expiredAt`: Timestamp at which the deposit expires.
+    - `remindAt`: Timestamp at which the user is reminded.
+    - `tag`: Tag of the crypto transaction, used to complement the address.
+      - `type`: Tag type.
+      - `value`: Tag value.
+    - `value`: Address to which the user sends the funds.
 - `destination`: Object containing information about what the user will receive.
   - `amount`: Amount the user will receive.
   - `rate`: Rate used to calculate the amount.
@@ -170,7 +173,12 @@ The values for `destination.paymentMethod.type` can be found using our [REST API
       "amount": "0.047116964221968237",
       "rate": "0.00056488387749632223",
       "asset": "ETH",
-      "network": "ethereum"
+      "network": "ethereum",
+      "depositAddress": {
+        "expiredAt": "2023-06-12T17:21:21.240Z",
+        "remindAt": "2023-06-12T17:21:21.240Z",
+        "value": "0xb794F5eA0ba39494cE839613fffBA74279579268"
+      }
     },
     "destination": {
       "amount": "100.00",
@@ -223,6 +231,13 @@ Triggered when a user has sent funds for their order.
   - `rate`: Rate used to calculate the amount.
   - `asset`: Cryptoasset the user sent.
   - `network`: Network of the sending asset.
+  - `depositAddress`: Object containing information related to the deposit.
+    - `expiredAt`: Timestamp at which the deposit expires.
+    - `remindAt`: Timestamp at which the user is reminded.
+    - `tag`: Tag of the crypto transaction, used to complement the address.
+      - `type`: Tag type.
+      - `value`: Tag value.
+    - `value`: Address to which the user sends the funds.
 - `destination`: Object containing information about what the user will receive.
   - `amount`: Amount the user will receive.
   - `rate`: Rate used to calculate the amount.
@@ -261,7 +276,12 @@ The values for `destination.paymentMethod.type` can be found using our [REST API
       "amount": "0.047116964221968237",
       "rate": "0.00056488387749632223",
       "asset": "ETH",
-      "network": "ethereum"
+      "network": "ethereum",
+      "depositAddress": {
+        "expiredAt": "2023-06-12T17:21:21.240Z",
+        "remindAt": "2023-06-12T17:21:21.240Z",
+        "value": "0xb794F5eA0ba39494cE839613fffBA74279579268"
+      }
     },
     "destination": {
       "amount": "100.00",
@@ -314,6 +334,13 @@ Triggered when a user has sent funds for their order and we have received them.
   - `rate`: Rate used to calculate the amount.
   - `asset`: Cryptoasset the user sent.
   - `network`: Network of the sending asset.
+  - `depositAddress`: Object containing information related to the deposit.
+    - `expiredAt`: Timestamp at which the deposit expires.
+    - `remindAt`: Timestamp at which the user is reminded.
+    - `tag`: Tag of the crypto transaction, used to complement the address.
+      - `type`: Tag type.
+      - `value`: Tag value.
+    - `value`: Address to which the user sends the funds.
 - `destination`: Object containing information about what the user will receive.
   - `amount`: Amount the user will receive.
   - `rate`: Rate used to calculate the amount.
@@ -352,7 +379,12 @@ The values for `destination.paymentMethod.type` can be found using our [REST API
       "amount": "0.047116964221968237",
       "rate": "0.00056488387749632223",
       "asset": "ETH",
-      "network": "ethereum"
+      "network": "ethereum",
+      "depositAddress": {
+        "expiredAt": "2023-06-12T17:21:21.240Z",
+        "remindAt": "2023-06-12T17:21:21.240Z",
+        "value": "0xb794F5eA0ba39494cE839613fffBA74279579268"
+      }
     },
     "destination": {
       "amount": "100.00",
@@ -405,6 +437,13 @@ Triggered when a user's order has completed.
   - `rate`: Rate used to calculate the amount.
   - `asset`: Cryptoasset the user sent.
   - `network`: Network of the sending asset.
+  - `depositAddress`: Object containing information related to the deposit.
+    - `expiredAt`: Timestamp at which the deposit expires.
+    - `remindAt`: Timestamp at which the user is reminded.
+    - `tag`: Tag of the crypto transaction, used to complement the address.
+      - `type`: Tag type.
+      - `value`: Tag value.
+    - `value`: Address to which the user sends the funds.
 - `destination`: Object containing information about what the user received.
   - `amount`: Amount the user received.
   - `rate`: Rate used to calculate the amount.
@@ -443,7 +482,12 @@ The values for `destination.paymentMethod.type` can be found using our [REST API
       "amount": "0.047116964221968237",
       "rate": "0.00056488387749632223",
       "asset": "ETH",
-      "network": "ethereum"
+      "network": "ethereum",
+      "depositAddress": {
+        "expiredAt": "2023-06-12T17:21:21.240Z",
+        "remindAt": "2023-06-12T17:21:21.240Z",
+        "value": "0xb794F5eA0ba39494cE839613fffBA74279579268"
+      }
     },
     "destination": {
       "amount": "100.00",
@@ -496,6 +540,13 @@ Triggered when a user's order has failed.
   - `rate`: Rate used to calculate the amount.
   - `asset`: Cryptoasset the user sent.
   - `network`: Network of the sending asset.
+  - `depositAddress`: Object containing information related to the deposit.
+    - `expiredAt`: Timestamp at which the deposit expires.
+    - `remindAt`: Timestamp at which the user is reminded.
+    - `tag`: Tag of the crypto transaction, used to complement the address.
+      - `type`: Tag type.
+      - `value`: Tag value.
+    - `value`: Address to which the user sends the funds.
 - `destination`: Object containing information about what the user would have received.
   - `amount`: Amount the user would have received.
   - `rate`: Rate used to calculate the amount.
@@ -536,7 +587,12 @@ The values for `destination.paymentMethod.type` can be found using our [REST API
       "amount": "0.047116964221968237",
       "rate": "0.00056488387749632223",
       "asset": "ETH",
-      "network": "ethereum"
+      "network": "ethereum",
+      "depositAddress": {
+        "expiredAt": "2023-06-12T17:21:21.240Z",
+        "remindAt": "2023-06-12T17:21:21.240Z",
+        "value": "0xb794F5eA0ba39494cE839613fffBA74279579268"
+      }
     },
     "destination": {
       "amount": "100.00",
@@ -592,6 +648,13 @@ Triggered when a user's order has been successfully refunded.
   - `rate`: Rate used to calculate the amount.
   - `asset`: Cryptoasset the user sent.
   - `network`: Network of the sending asset.
+  - `depositAddress`: Object containing information related to the deposit.
+    - `expiredAt`: Timestamp at which the deposit expires.
+    - `remindAt`: Timestamp at which the user is reminded.
+    - `tag`: Tag of the crypto transaction, used to complement the address.
+      - `type`: Tag type.
+      - `value`: Tag value.
+    - `value`: Address to which the user sends the funds.
 - `destination`: Object containing information about what the user would have received.
   - `amount`: Amount the user would have received.
   - `rate`: Rate used to calculate the amount.
@@ -610,7 +673,7 @@ Triggered when a user's order has been successfully refunded.
   - `network`: Network of the receiving asset.
   - `address`: User's wallet address to receive funds.
   - `priority`: Priority of the crypto transaction.
-  - `tag`: Tag of the crypto transaction, used to complement the `address`.
+  - `tag`: Tag of the crypto transaction, used to complement the address.
     - `type`: Tag type (e.g.: `memo` or `destination-tag`).
     - `value`: Tag value.
 - `widget`: Widget associated with the session.
@@ -640,7 +703,12 @@ The values for `destination.paymentMethod.type` can be found using our [REST API
       "amount": "0.047116964221968237",
       "rate": "0.00056488387749632223",
       "asset": "ETH",
-      "network": "ethereum"
+      "network": "ethereum",
+      "depositAddress": {
+        "expiredAt": "2023-06-12T17:21:21.240Z",
+        "remindAt": "2023-06-12T17:21:21.240Z",
+        "value": "0xb794F5eA0ba39494cE839613fffBA74279579268"
+      }
     },
     "destination": {
       "amount": "100.00",
