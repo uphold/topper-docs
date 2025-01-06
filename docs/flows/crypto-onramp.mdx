@@ -109,7 +109,7 @@ We recommend that you use `XRP` for testing purposes when integrating Topper sin
 <Tabs>
   <TabItem label="Not editable" value="not-editable" default>
 
-When `recipientEditMode` is `not-editable`, the user can can't change `asset`, `network`, `address` or `tag` on the widget. This means that these fields are all required on the bootstrap token.
+When `recipientEditMode` is `not-editable`, the user can't change `asset`, `network`, `address` or `tag` on the widget. This means that these fields are all required on the bootstrap token.
 
 ```js
 {
@@ -161,6 +161,30 @@ When `recipientEditMode` is `all-editable`, the user can change `asset`, `networ
   // highlight-start
   "target": {
     "recipientEditMode": "all-editable"
+  }
+  // highlight-end
+}
+```
+
+  </TabItem>
+
+  <TabItem label="Only asset same network" value="only-asset-same-network" default>
+
+When `recipientEditMode` is `only-asset-same-network`, the user can't change `network`, `address` or `tag` on the widget. This means that these fields are all required on the bootstrap token.
+
+```js
+{
+  "iat": 1679538023,
+  "jti": "4b552af1-1592-42f8-bbc9-dac28e2b4000",
+  "sub": "b9fe022b-f436-49e1-bb89-6f2e8eabf336",
+  // highlight-start
+  "target": {
+    "address": "0xb794f5ea0ba39494ce839613fffba74279579268",
+    "allowedAssets": ["ETH", "RLUSD"],
+    "asset": "ETH",
+    "label": "My wallet",
+    "network": "ethereum",
+    "recipientEditMode": "only-asset-same-network"
   }
   // highlight-end
 }
