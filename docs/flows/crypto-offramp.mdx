@@ -37,7 +37,7 @@ The crypto off-ramp flow allows a user to sell cryptocurrency and convert it int
     - `all-editable`: The user can change `amount`, `asset` and `network` on the widget. (default)
     - `only-amount`: The user can only change the amount on the widget.
   - `network` (_optional_): Network of the receiving asset.
-  - `walletSendUrl` (_optional_): URL to redirect the user to send the crypto from their wallet.
+  - `walletSendUrl` (_optional_): URL to redirect the user to send the crypto from their wallet. It will include order details as query parameters like `topper_order_address`, `topper_order_amount`, `topper_order_asset_code`, `topper_order_asset_network`, `topper_order_tag_type`, `topper_order_tag_value`, and others. Placeholders `{topper_*}` can be used on the given URL for dynamic value replacement, useful for deep linking (e.g: `https://partner.app/send?amount={topper_order_amount}&address={topper_order_address}`).
   - `walletSendUrlTarget` (_optional_): In which tab should the `walletSendUrl` be opened.
     - `new-tab`: Open in a new tab.
     - `same-tab`: Open in the same tab or iframe (default).
