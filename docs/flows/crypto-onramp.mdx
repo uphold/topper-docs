@@ -28,7 +28,7 @@ The crypto on-ramp flow allows a user to add funds from a credit or debit card t
   - `amount` (_optional_): Amount to be paid.
   - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to make the payment.
   - `paymentMethod` (_optional_): An object configuring the pre-selected payment method.
-    - `network`: Payment method network (e.g.: `apple-pay`, `google-pay`, `pix` or `card`).
+    - `network`: Payment method network (e.g.: `apple-pay`, `google-pay`, `pix`, `card` or `sepa`).
 - `target` (_optional_): An object configuring recipient wallet.
   - `allowedAssets` (_optional_): Set of cryptoassets that the user can set as target asset. Can be an array of objects with `asset` and `networks` (e.g.: `{ "asset": "ETH", "networks": ["ethereum"] }`), an array of asset codes (e.g.: `["BTC", "ETH"]` where all available networks for each asset are included), or a combination of both for flexibility.
   - `amount` (_optional_): Amount the user will receive.
