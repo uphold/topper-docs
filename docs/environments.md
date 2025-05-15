@@ -19,6 +19,18 @@ If you face issues initializing Topper and see a 'something went wrong' error pa
 
 You can bypass email authentication and phone verification codes by typing `000000`.
 
+### ID verification
+
+You can skip the need to upload a real ID by either:
+- Using an email from a whitelisted domain (e.g., `user@whitelisted-domain.com`)
+- Adding `+kyc` to your email address (e.g., `user+kyc@domain.com`)
+
+Users will still see the KYC onboarding interface, maintaining a production-like experience.
+
+:::note
+To whitelist a domain, please contact your account manager.
+:::
+
 ### Cards
 
 The following card details can be used to force specific outcomes when creating accounts:
