@@ -1,0 +1,42 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+      - sandbox
+      - 'environment/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-8g-4cpu-arm64
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 22
+        cache: npm
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build
+      run: npm run build
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Setup ORAS CLI
+      uses: oras-project/setup-oras@v1
+      with:
+        version: 1.2.3
+
+    - name: Push artifact to AWS ECR using ORAS
+      run: |
+        cd $NPM_WORKSPACE/build
+        oras push "${{ steps.login-ecr.outputs.registry }}/topper-docs:${GITHUB_SHA}"
