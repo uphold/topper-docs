@@ -42,6 +42,9 @@ The crypto off-ramp flow allows a user to sell cryptocurrency and convert it int
     - `new-tab`: Open in a new tab.
     - `same-tab`: Open in the same tab or iframe (default).
     - `parent-tab`: Useful only in an iframe: open in the tab that contains the iframe.
+  - `walletSendUrlMode` (_optional_): Defines how the order review CTA behaves.
+    - `button`: Navigates to the order payment details screen (default).
+    - `redirect`: Automatically redirects to the `walletSendUrl` after the order is committed.
 - `target` (_optional_): An object configuring the amount and asset to be paid.
   - `amount` (_optional_): Amount the user will receive.
   - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to receive the funds.
