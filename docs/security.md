@@ -1,12 +1,12 @@
 ---
-sidebar_position: 14
+sidebar_position: 12
 ---
 
 # Security
 
 ## Protect your signing keys
 
-Never expose or share your private keys. If compromised, attackers can initiate sessions on your behalf. 
+Never expose or share your private keys. If compromised, attackers can initiate sessions on your behalf.
 
 Never share your private keys with anyone (including us), and never expose them in a public code repository or website source code. To further protect your keys, you should consider rotating your private keys regularly.
 
