@@ -29,6 +29,8 @@ The crypto off-ramp flow allows a user to sell cryptocurrency and convert it int
     - `type`: Tag type (e.g.: `memo` or `destination-tag`).
     - `value`: Tag value.
   - `priority` (_optional_): Priority of the crypto transaction (e.g.: `fast` will enable instant send for `Dash` transactions). Defaults to `normal`.
+- `simulation` (_optional_): Simulation object.
+  - `country` (_optional_): Country to use during simulations, in alpha-2 code format; It will be ignored after the user is authenticated and the user's country will be used.
 - `source` (_optional_): An object configuring the asset and amount to be sold.
   - `allowedAssets` (_optional_): Set of cryptoassets that the user can set as source asset.
   - `amount` (_optional_): Amount to be sold.
@@ -86,6 +88,9 @@ We recommend that you use `XRP` for testing purposes when integrating Topper sin
   "refund": {
     "address": "0xb794f5ea0ba39494ce839613fffba74279579268",
     "priority": "normal"
+  },
+  "simulation": {
+    "country": "US"
   },
   "source": {
     "allowedAssets": [
