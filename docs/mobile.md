@@ -4,11 +4,11 @@ sidebar_position: 10
 
 # Mobile
 
-When integrating Topper with a mobile app you can either open Topper on a **user's browser** (where no extra configuration is required), or embed it in a **WebView**.
+When integrating Topper with a mobile app you can either open Topper on a **user's browser** (where no extra configuration is required), **WebView** or **Safari View Controller**.
 
-When embedding on a **WebView**, please ensure the following steps have been completed:
+On **WebView** and **Safari View Controller** scenarios, please ensure the following steps have been completed:
 
-- Set the correct parameters referenced on [Single Sign-On](./single-sign-on.md#mobile-app) and [Digital Wallets](./digital-wallets.md#mobile-app).
+- Set the correct parameters referenced on [Single Sign-On](./single-sign-on.md#mobile-app) and [Digital Wallets](./digital-wallets/intro#mobile-integration).
 - Configure the **WebView** to support [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/).
 - Configure camera and audio app permissions to support [Veriff](https://www.veriff.com/).
 
