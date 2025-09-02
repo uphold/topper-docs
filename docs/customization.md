@@ -16,6 +16,8 @@ To skip this screen on initialization and go straight to authentication, simply 
 |-------------------------|-------------------------|
 | <img src="/images/amount-selection-screen.jpg" alt="Amount selection screen" width="300"/> | <img src="/images/get-started-screen.jpg" alt="Authentication screen" width="300"/> |
 
+To pre-fill the email input on the authentication screen, add the `user_email` query parameter with the escaped email value.
+
 
 **What other initial screens are supported?**
 
