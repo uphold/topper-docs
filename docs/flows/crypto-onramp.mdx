@@ -24,6 +24,8 @@ The crypto on-ramp flow allows a user to add funds from a credit or debit card t
     - `same-tab`: Open in the same tab or iframe (default).
     - `parent-tab`: Useful only in an iframe: open in the tab that contains the iframe.
 - `partnerFee` (_deprecated_): Use `partner.fee` instead.
+- `simulation` (_optional_): Simulation object.
+  - `country` (_optional_): Country to use during simulations, in alpha-2 code format; It will be ignored after the user is authenticated and the user's country will be used.
 - `source` (_optional_): An object configuring the asset and amount to be paid.
   - `amount` (_optional_): Amount to be paid.
   - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to make the payment.
@@ -75,6 +77,9 @@ We recommend that you use `XRP` for testing purposes when integrating Topper sin
     },
     "continueUrl": "https://example.com",
     "continueUrlTarget": "new-tab"
+  },
+  "simulation": {
+    "country": "US"
   },
   "source": {
     "amount": "100.00",
