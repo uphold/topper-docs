@@ -23,7 +23,7 @@ You can bypass email authentication and phone verification codes by typing `0000
 
 You can skip the need to upload a real ID by either:
 - Using an email from a whitelisted domain (e.g., `user@whitelisted-domain.com`)
-- Adding `+kyc` to your email address (e.g., `user+kyc@domain.com`)
+- Adding `+kyc` to your email username (e.g., `user+kyc@domain.com`, `user+kyc+abc@domain.com`)
 
 Users will still see the KYC onboarding interface, maintaining a production-like experience.
 
