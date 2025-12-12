@@ -62,6 +62,36 @@ When using the above card numbers, Topper will accept any value for the expiry d
 In the `crypto_offramp` flow, only `debit` cards that match the user's country of residence will be accepted.
 :::
 
+### PayPal and Venmo
+
+The following PayPal and Venmo accounts can be used for testing:
+
+#### PayPal Accounts
+
+| Email                 | Password       | Country |
+|-----------------------|----------------|---------|
+| testpaypal@topper.com | PaypalP@y12345 | US      |
+
+#### Venmo Accounts
+
+| Username       | Password      | Country |
+|----------------|---------------|---------|
+| pwv-test-user2 | VenmoP@y12345 | US      |
+| pwv-test-user3 | VenmoP@y12345 | US      |
+
+:::note
+Both PayPal and Venmo payment methods are only available for US users.
+:::
+
+:::caution
+Guidelines for these accounts to avoid impacting shared testing values:
+
+- Do not change the email, username, phone number and/or the password;
+- Do not enable "remember this device" and/or multi-factor authentication (MFA).
+
+Any of these actions may cause the testing accounts to stop working.
+:::
+
 ## Production
 
 After successfully onboarding and testing your integration in our sandbox environment, you can start Topper sessions for your end users using the production environment.
