@@ -232,6 +232,8 @@ Triggered when a user has placed an order.
   - `asset`: Asset used to charge the fee.
   - `normalized`: Amount in USD that the user was charged for this fee.
   - `type`: Type of fee (`network`, `deposit` or `partner`).
+- `user`: An object containing user related information.
+  - `country`: country of the user.
 - `widget`: Widget associated with the session.
   - `id` UUID of the widget.
   - `name`: Name of the widget.
@@ -290,6 +292,9 @@ The values for `origin.paymentMethod.type` can be found using our [REST API](../
         "type": "partner"
       }
     ],
+    "user": {
+      "country": "US"
+    },
     "widget": {
       "id": "998544f2-5b01-4062-9394-22827ff5db6c",
       "name": "ACME",
@@ -335,6 +340,8 @@ Triggered when a user has been charged.
   - `asset`: Asset used to charge the fee.
   - `normalized`: Amount in USD that the user was charged for this fee.
   - `type`: Type of fee (`network`, `deposit` or `partner`).
+- `user`: An object containing user related information.
+  - `country`: country of the user.
 - `widget`: Widget associated with the session.
   - `id` UUID of the widget.
   - `name`: Name of the widget.
@@ -393,6 +400,9 @@ The values for `origin.paymentMethod.type` can be found using our [REST API](../
         "type": "partner"
       }
     ],
+    "user": {
+      "country": "US"
+    },
     "widget": {
       "id": "998544f2-5b01-4062-9394-22827ff5db6c",
       "name": "ACME",
@@ -442,6 +452,8 @@ Triggered when a user's order has completed.
   - `asset`: Asset used to charge the fee.
   - `normalized`: Amount in USD that the user was charged for this fee.
   - `type`: Type of fee (`network`, `deposit` or `partner`).
+- `user`: An object containing user related information.
+  - `country`: country of the user.
 - `widget`: Widget associated with the session.
   - `id` UUID of the widget.
   - `name`: Name of the widget.
@@ -504,6 +516,9 @@ The values for `origin.paymentMethod.type` can be found using our [REST API](../
         "type": "partner"
       }
     ],
+    "user": {
+      "country": "US"
+    },
     "widget": {
       "id": "998544f2-5b01-4062-9394-22827ff5db6c",
       "name": "ACME",
@@ -549,6 +564,8 @@ Triggered when a user's order has failed.
   - `asset`: Asset used to charge the fee.
   - `normalized`: Amount in USD that the user was charged for this fee.
   - `type`: Type of fee (`network`, `deposit` or `partner`).
+- `user`: An object containing user related information.
+  - `country`: country of the user.
 - `widget`: Widget associated with the session.
   - `id` UUID of the widget.
   - `name`: Name of the widget.
@@ -609,6 +626,9 @@ The values for `origin.paymentMethod.type` can be found using our [REST API](../
         "type": "partner"
       }
     ],
+    "user": {
+      "country": "US"
+    },
     "widget": {
       "id": "998544f2-5b01-4062-9394-22827ff5db6c",
       "name": "ACME",
@@ -661,6 +681,8 @@ Triggered when a user's order has been successfully refunded.
   - `formattedAmount`: Amount refunded to the user
   - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to make the payment.
   - `rate`: Rate used to calculate the amount.
+- `user`: An object containing user related information.
+  - `country`: country of the user.
 - `widget`: Widget associated with the session.
   - `id` UUID of the widget.
   - `name`: Name of the widget.
@@ -723,6 +745,9 @@ The values for `origin.paymentMethod.type` can be found using our [REST API](../
       "asset": "USD",
       "formattedAmount": "$ 100.00",
       "rate": "1770.27534301775263314892",
+    },
+    "user": {
+      "country": "US"
     },
     "widget": {
       "id": "998544f2-5b01-4062-9394-22827ff5db6c",

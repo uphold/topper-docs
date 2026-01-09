@@ -154,6 +154,8 @@ Triggered when a user has placed an order.
   - `asset`: Asset used to charge the fee.
   - `normalized`: Amount in USD that the user was charged for this fee.
   - `type`: Type of fee (`network`, `deposit` or `partner`).
+- `user`: An object containing user related information.
+  - `country`: country of the user.
 - `widget`: Widget associated with the session.
   - `id` UUID of the widget.
   - `name`: Name of the widget.
@@ -210,6 +212,9 @@ The values for `destination.paymentMethod.type` can be found using our [REST API
         "type": "partner"
       }
     ],
+    "user": {
+      "country": "US"
+    },
     "widget": {
       "id": "998544f2-5b01-4062-9394-22827ff5db6c",
       "name": "ACME",
@@ -257,6 +262,8 @@ Triggered when a user has sent funds for their order.
   - `asset`: Asset used to charge the fee.
   - `normalized`: Amount in USD that the user was charged for this fee.
   - `type`: Type of fee (`network`, `deposit` or `partner`).
+- `user`: An object containing user related information.
+  - `country`: country of the user.
 - `widget`: Widget associated with the session.
   - `id` UUID of the widget.
   - `name`: Name of the widget.
@@ -313,6 +320,9 @@ The values for `destination.paymentMethod.type` can be found using our [REST API
         "type": "partner"
       }
     ],
+    "user": {
+      "country": "US"
+    },
     "widget": {
       "id": "998544f2-5b01-4062-9394-22827ff5db6c",
       "name": "ACME",
@@ -360,6 +370,8 @@ Triggered when a user has sent funds for their order and we have received them.
   - `asset`: Asset used to charge the fee.
   - `normalized`: Amount in USD that the user was charged for this fee.
   - `type`: Type of fee (`network`, `deposit` or `partner`).
+- `user`: An object containing user related information.
+  - `country`: country of the user.
 - `widget`: Widget associated with the session.
   - `id` UUID of the widget.
   - `name`: Name of the widget.
@@ -416,6 +428,9 @@ The values for `destination.paymentMethod.type` can be found using our [REST API
         "type": "partner"
       }
     ],
+    "user": {
+      "country": "US"
+    },
     "widget": {
       "id": "998544f2-5b01-4062-9394-22827ff5db6c",
       "name": "ACME",
@@ -463,6 +478,8 @@ Triggered when a user's order has completed.
   - `asset`: Asset used to charge the fee.
   - `normalized`: Amount in USD that the user was charged for this fee.
   - `type`: Type of fee (`network`, `deposit` or `partner`).
+- `user`: An object containing user related information.
+  - `country`: country of the user.
 - `widget`: Widget associated with the session.
   - `id` UUID of the widget.
   - `name`: Name of the widget.
@@ -519,6 +536,9 @@ The values for `destination.paymentMethod.type` can be found using our [REST API
         "type": "partner"
       }
     ],
+    "user": {
+      "country": "US"
+    },
     "widget": {
       "id": "998544f2-5b01-4062-9394-22827ff5db6c",
       "name": "ACME",
@@ -566,6 +586,8 @@ Triggered when a user's order has failed.
   - `asset`: Asset used to charge the fee.
   - `normalized`: Amount in USD that the user was charged for this fee.
   - `type`: Type of fee (`network`, `deposit` or `partner`).
+- `user`: An object containing user related information.
+  - `country`: country of the user.
 - `widget`: Widget associated with the session.
   - `id` UUID of the widget.
   - `name`: Name of the widget.
@@ -624,6 +646,9 @@ The values for `destination.paymentMethod.type` can be found using our [REST API
         "type": "partner"
       }
     ],
+    "user": {
+      "country": "US"
+    },
     "widget": {
       "id": "998544f2-5b01-4062-9394-22827ff5db6c",
       "name": "ACME",
@@ -684,6 +709,8 @@ Triggered when a user's order has been successfully refunded.
   - `tag`: Tag of the crypto transaction, used to complement the address.
     - `type`: Tag type (e.g.: `memo` or `destination-tag`).
     - `value`: Tag value.
+- `user`: An object containing user related information.
+  - `country`: country of the user.
 - `widget`: Widget associated with the session.
   - `id` UUID of the widget.
   - `name`: Name of the widget.
@@ -747,6 +774,9 @@ The values for `destination.paymentMethod.type` can be found using our [REST API
       "network": "ethereum",
       "address": "0xb794F5eA0ba39494cE839613fffBA74279579268",
       "priority": "normal"
+    },
+    "user": {
+      "country": "US"
     },
     "widget": {
       "id": "998544f2-5b01-4062-9394-22827ff5db6c",
