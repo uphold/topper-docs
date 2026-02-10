@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 ---
 
 import Tabs from '@theme/Tabs';
@@ -22,28 +22,35 @@ A webhook request will include the following data:
 
 ## Events
 
-Full information about the available events and their associated payloads can be found on the associated **Flows** page.
+Full information about the available events and their associated payloads can be found on the [events](./events/crypto-onramp) page.
 
-### Onramp flow
-
-| Event | Trigger |
-| - | - |
-| [`order:crypto-onramp:committed`](./flows/crypto-onramp.mdx#ordercrypto-onrampcommitted) | User placed an order. |
-| [`order:crypto-onramp:charged`](./flows/crypto-onramp.mdx#ordercrypto-onrampcharged) | User has been charged for their order. |
-| [`order:crypto-onramp:completed`](./flows/crypto-onramp.mdx#ordercrypto-onrampcompleted) | User's order has completed. |
-| [`order:crypto-onramp:failed`](./flows/crypto-onramp.mdx#ordercrypto-onrampfailed) | User's order has failed. |
-| [`order:crypto-onramp:refund:completed`](./flows/crypto-onramp.mdx#ordercrypto-onramprefundcompleted) | User's order has been successfully refunded. |
-
-### Offramp flow
+### Onramp events
 
 | Event | Trigger |
 | - | - |
-| [`order:crypto-offramp:committed`](./flows/crypto-offramp.mdx#ordercrypto-offrampcommitted) | User placed an order. |
-| [`order:crypto-offramp:funds-sent`](./flows/crypto-offramp.mdx#ordercrypto-offrampfunds-sent) | User has sent funds for their order. |
-| [`order:crypto-offramp:funds-received`](./flows/crypto-offramp.mdx#ordercrypto-offrampfunds-received) | User has sent funds for their order and we have received them. |
-| [`order:crypto-offramp:completed`](./flows/crypto-offramp.mdx#ordercrypto-offrampcompleted) | User's order has completed. |
-| [`order:crypto-offramp:failed`](./flows/crypto-offramp.mdx#ordercrypto-offrampfailed) | User's order has failed. |
-| [`order:crypto-offramp:refund:completed`](./flows/crypto-offramp.mdx#ordercrypto-offramprefundcompleted) | User's order has been successfully refunded. |
+| [`order:crypto-onramp:committed`](./events/crypto-onramp.mdx#ordercrypto-onrampcommitted) | User placed an order. |
+| [`order:crypto-onramp:charged`](./events/crypto-onramp.mdx#ordercrypto-onrampcharged) | User has been charged for their order. |
+| [`order:crypto-onramp:completed`](./events/crypto-onramp.mdx#ordercrypto-onrampcompleted) | User's order has completed. |
+| [`order:crypto-onramp:failed`](./events/crypto-onramp.mdx#ordercrypto-onrampfailed) | User's order has failed. |
+| [`order:crypto-onramp:refund:completed`](./events/crypto-onramp.mdx#ordercrypto-onramprefundcompleted) | User's order has been successfully refunded. |
+
+### Offramp events
+
+| Event | Trigger |
+| - | - |
+| [`order:crypto-offramp:committed`](./events/crypto-offramp.mdx#ordercrypto-offrampcommitted) | User placed an order. |
+| [`order:crypto-offramp:funds-sent`](./events/crypto-offramp.mdx#ordercrypto-offrampfunds-sent) | User has sent funds for their order. |
+| [`order:crypto-offramp:funds-received`](./events/crypto-offramp.mdx#ordercrypto-offrampfunds-received) | User has sent funds for their order and we have received them. |
+| [`order:crypto-offramp:completed`](./events/crypto-offramp.mdx#ordercrypto-offrampcompleted) | User's order has completed. |
+| [`order:crypto-offramp:failed`](./events/crypto-offramp.mdx#ordercrypto-offrampfailed) | User's order has failed. |
+| [`order:crypto-offramp:refund:completed`](./events/crypto-offramp.mdx#ordercrypto-offramprefundcompleted) | User's order has been successfully refunded. |
+
+### User events
+
+| Event | Trigger |
+| - | - |
+| [`user:created`](./events/user.mdx#usercreated) | User created a new account. |
+| [`user:logged-in`](./events/user.mdx#userlogged-in) | User logged in. |
 
 ## Verifying a request
 
@@ -264,7 +271,7 @@ def createWebhookVerifier(pubJwk):
     jwsSplited = topperJwsSig.split('.')
     header, signature = jwsSplited[0], jwsSplited[2]
     payload = base64url_encode(bytes(body, encoding="utf-8"))
-    
+
     token = f"{header}.{payload.decode("utf-8")}.{signature}"
 
     # Verify the token.
@@ -284,7 +291,7 @@ body = '{"foo":"bar"}'
 # X-Topper-JWS-Signature request header example.
 topperJwsSig = 'eyJhbGciOiJFUzI1NiJ9..2H0Ypm5sVzuSpgyZySdAJan05lYxctqhmO8btghFQQzkisvSlNvNWzQ1kqTPXTLP_dR4zQZrTsSsShAK51I4EQ'
 
-if __name__ == "__main__": 
+if __name__ == "__main__":
   # Example of verifying a webhook request.
   verifyWebhook = createWebhookVerifier(pubJwk)
   verified = verifyWebhook(body, topperJwsSig)
