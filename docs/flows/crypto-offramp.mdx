@@ -29,6 +29,9 @@ The crypto off-ramp flow allows a user to sell cryptocurrency and convert it int
     - `type`: Tag type (e.g.: `memo` or `destination-tag`).
     - `value`: Tag value.
   - `priority` (_optional_): Priority of the crypto transaction (e.g.: `fast` will enable instant send for `Dash` transactions). Defaults to `normal`.
+- `reusableKYC` (_optional_): An object to provide a KYC shareable token.
+  - `provider` (_required_): Provider that issued the shareable token.
+  - `token` (_required_): Token issued that can be used to fetch user information.
 - `simulation` (_optional_): Simulation object.
   - `country` (_optional_): Country to use during simulations, in alpha-2 code format; It will be ignored after the user is authenticated and the user's country will be used.
 - `source` (_optional_): An object configuring the asset and amount to be sold.
