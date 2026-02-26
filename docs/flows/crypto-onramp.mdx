@@ -24,6 +24,9 @@ The crypto on-ramp flow allows a user to add funds from a credit or debit card t
     - `same-tab`: Open in the same tab or iframe (default).
     - `parent-tab`: Useful only in an iframe: open in the tab that contains the iframe.
 - `partnerFee` (_deprecated_): Use `partner.fee` instead.
+- `reusableKYC` (_optional_): An object to provide a KYC shareable token.
+  - `provider` (_required_): Provider that issued the shareable token.
+  - `token` (_required_): Token issued that can be used to fetch user information.
 - `simulation` (_optional_): Simulation object.
   - `country` (_optional_): Country to use during simulations, in alpha-2 code format; It will be ignored after the user is authenticated and the user's country will be used.
 - `source` (_optional_): An object configuring the asset and amount to be paid.
