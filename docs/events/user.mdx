@@ -11,6 +11,9 @@ import TabItem from '@theme/TabItem';
 | - | - |
 | [`user:created`](#usercreated) | User created a new account. |
 | [`user:logged-in`](#userlogged-in) | User logged in. |
+| [`user:kyc:initiated`](#userkycinitiated) | User's KYC process has been initiated. |
+| [`user:kyc:succeeded`](#userkycsucceeded) | User's KYC process has succeeded. |
+| [`user:kyc:failed`](#userkycfailed) | User's KYC process has failed. |
 
 ## `user:created`
 
@@ -71,6 +74,114 @@ Triggered when a user logs in.
     "user": {
       "id": "b9fe022b-f436-49e1-bb89-6f2e8eabf336",
       "confirmedAt": "2023-06-12T17:21:21.240Z"
+    }
+    // highlight-end
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+## `user:kyc:initiated`
+
+Triggered when a user's KYC process has been initiated.
+
+<Tabs>
+  <TabItem label="Schema" value="schema" default>
+
+- `kycSession`: KYC session object.
+  - `initiatedAt`: Timestamp at which the KYC session was initiated.
+- `user`: User object.
+  - `id`: UUID of the user.
+
+</TabItem>
+  <TabItem label="Example" value="example">
+
+```js
+{
+  "name": "user:kyc:initiated",
+  "id": "00a991cf-a870-43af-88b8-43c51532831d",
+  "bootstrapTokenId": "141bfa06-481e-4684-96eb-cec4ad529616",
+  "data": {
+    // highlight-start
+    "kycSession": {
+      "initiatedAt": "2024-01-15T10:30:00.000Z"
+    },
+    "user": {
+      "id": "b9fe022b-f436-49e1-bb89-6f2e8eabf336"
+    }
+    // highlight-end
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+## `user:kyc:succeeded`
+
+Triggered when a user's KYC process has succeeded.
+
+<Tabs>
+  <TabItem label="Schema" value="schema" default>
+
+- `kycSession`: KYC session object.
+  - `updatedAt`: Timestamp at which the KYC session was last updated.
+- `user`: User object.
+  - `id`: UUID of the user.
+
+</TabItem>
+  <TabItem label="Example" value="example">
+
+```js
+{
+  "name": "user:kyc:succeeded",
+  "id": "00a991cf-a870-43af-88b8-43c51532831d",
+  "bootstrapTokenId": "141bfa06-481e-4684-96eb-cec4ad529616",
+  "data": {
+    // highlight-start
+    "kycSession": {
+      "updatedAt": "2024-01-15T10:35:00.000Z"
+    },
+    "user": {
+      "id": "b9fe022b-f436-49e1-bb89-6f2e8eabf336"
+    }
+    // highlight-end
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+## `user:kyc:failed`
+
+Triggered when a user's KYC process has failed.
+
+<Tabs>
+  <TabItem label="Schema" value="schema" default>
+
+- `kycSession`: KYC session object.
+  - `updatedAt`: Timestamp at which the KYC session was last updated.
+- `user`: User object.
+  - `id`: UUID of the user.
+
+</TabItem>
+  <TabItem label="Example" value="example">
+
+```js
+{
+  "name": "user:kyc:failed",
+  "id": "00a991cf-a870-43af-88b8-43c51532831d",
+  "bootstrapTokenId": "141bfa06-481e-4684-96eb-cec4ad529616",
+  "data": {
+    // highlight-start
+    "kycSession": {
+      "updatedAt": "2024-01-15T10:35:00.000Z"
+    },
+    "user": {
+      "id": "b9fe022b-f436-49e1-bb89-6f2e8eabf336"
     }
     // highlight-end
   }
