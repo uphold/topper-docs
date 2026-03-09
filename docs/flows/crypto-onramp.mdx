@@ -15,14 +15,21 @@ The crypto on-ramp flow allows a user to add funds from a credit or debit card t
   <TabItem label="Schema" value="schema" default>
 
 - `partner` (_optional_): Partner object.
+  - `continueUrl` (_optional_): URL to redirect the user to after the order is placed.
+  - `continueUrlTarget` (_optional_): In which tab should the `continueUrl` be opened.
   - `displayName` (_optional_): Partner name to be displayed to the user.
   - `fee` (_optional_): An object configuring the partner fee to be charged.
     - `percentage`: Percentage of the total source amount (the maximum allowed value is "5").
-  - `continueUrl` (_optional_): URL to redirect the user to after the order is placed.
-  - `continueUrlTarget` (_optional_): In which tab should the `continueUrl` be opened.
     - `new-tab`: Open in a new tab.
     - `same-tab`: Open in the same tab or iframe (default).
     - `parent-tab`: Useful only in an iframe: open in the tab that contains the iframe.
+  - `validation` (_optional_): Custom request validation parameters.
+    - `device`: (_optional_): Device parameters to validate.
+      - `ip` (_optional_): User IP on partner's side that we should validate remains the same.
+      - `user-agent` (_optional_): User agent used on partner's side that we should validate remains the same.
+    - `encrypted` (_optional_): Encrypted parameters to validate.
+      - `ip` (_optional_): Encrypted user IP on partner's side that we should validate remains the same.
+      - `user-agent` (_optional_): Encrypted user agent used on partner's side that we should validate remains the same.
 - `partnerFee` (_deprecated_): Use `partner.fee` instead.
 - `simulation` (_optional_): Simulation object.
   - `country` (_optional_): Country to use during simulations, in alpha-2 code format; It will be ignored after the user is authenticated and the user's country will be used.
@@ -71,12 +78,18 @@ We recommend that you use `XRP` for testing purposes when integrating Topper sin
   "sub": "b9fe022b-f436-49e1-bb89-6f2e8eabf336",
   // highlight-start
   "partner": {
+    "continueUrl": "https://example.com",
+    "continueUrlTarget": "new-tab",
     "displayName": "ACME",
     "fee": {
       "percentage": "1"
     },
-    "continueUrl": "https://example.com",
-    "continueUrlTarget": "new-tab"
+    validation: {
+      device:{
+        ip:'1.2.3.4',
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)'
+      }
+    }
   },
   "simulation": {
     "country": "US"
@@ -108,6 +121,20 @@ We recommend that you use `XRP` for testing purposes when integrating Topper sin
 
   </TabItem>
 </Tabs>
+
+### Custom partner validation
+
+To increase customer security we support an extra layer of validations that can be customizable by our partners. This layer includes validations from customer's device, like IP and user agent, that we ensure is the same as the one provided by you. In case of any mismatch, the user request to initiate a widget session will fail.
+We accept this validation parameters as a plain string or as an encrypted string. If you send us encrypted parameters, we'll fetch the same parameters we receive from the user request, encrypt them and compare if both hashs are equal. For this the encryption secret will need to be shared between Topper and the partner.
+If you plan on using encrypted validation, please check the example below to see how you should encrypt your data.
+
+```js
+import { createHmac } from 'node:crypto';
+
+await createHmac('sha256', <secretKey>)
+  .update(<parameter>)
+  .digest('hex');
+```
 
 ### Recipient edit mode
 
