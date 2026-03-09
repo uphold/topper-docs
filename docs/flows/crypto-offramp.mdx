@@ -23,6 +23,14 @@ The crypto off-ramp flow allows a user to sell cryptocurrency and convert it int
   - `displayName` (_optional_): Partner name to be displayed to the user.
   - `fee` (_optional_): An object configuring the partner fee to be charged.
     - `percentage`: Percentage of the total source amount (the maximum allowed value is "5").
+  - `validation` (_optional_): Custom request validation parameters.
+    - `device`: (_optional_): Device parameters to validate.
+      - `alg` (_optional_): Algorithm used to hash the fields. In case no algorithm is set, we'll be assumed that `sha256` was used.
+      - `fields` (_optional_): Fields that have been hashed.
+      - `hash` (_optional_): Result of hashing the fields appended in the given order, without any extra characters or whitespaces, using the given algorithm.
+      - `ip` (_optional_): User IP on partner's side that we should validate remains the same.
+      - `ipVersion` (_optional_): Version of IP value used on the hash.
+      - `user-agent` (_optional_): User agent used on partner's side that we should validate remains the same.
 - `refund` (_optional_): An object configuring the refund details. The asset and network of the refund will be the same as the source asset and network.
   - `address`: Address to which the refund will be sent.
   - `tag` (_optional_): Tag of the crypto transaction, used to complement the `address`.
@@ -83,6 +91,12 @@ We recommend that you use `XRP` for testing purposes when integrating Topper sin
     "displayName": "ACME",
     "fee": {
       "percentage": "1"
+    },
+    validation: {
+      device:{
+        ip:'1.2.3.4',
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)'
+      }
     }
   },
   "refund": {
@@ -117,6 +131,23 @@ We recommend that you use `XRP` for testing purposes when integrating Topper sin
 
   </TabItem>
 </Tabs>
+
+### Custom partner validation
+
+To increase customer security we support an extra layer of validations that can be customizable by our partners. This layer includes validations from customer's device, like IP and user agent, that we ensure is the same as the one provided by you. In case of any mismatch, the user request to initiate a widget session will fail.
+We accept this validation parameters as plain strings or as an hashed string. If you send us hashed parameters, we'll fetch the same parameters we receive from the user request, hash them and compare if both hashes are equal.
+If you plan on using hashed validation, please check the example below to see how you should hash your data.
+
+```js
+import { createHash } from 'node:crypto';
+
+await createHash('sha256')
+  .update('1.2.3.4')
+  .digest('hex');
+```
+
+  :::note
+  When validating user IP, if the IP versions mismatch, validation will be partially (plain string validation) or entirely (hashed validation) skipped.
 
 ## Events
 
