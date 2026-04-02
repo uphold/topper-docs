@@ -15,7 +15,7 @@ jobs:
       pull-requests: write
 
     steps:
-    - name: Checkout code
+    - name: Checkout Code
       uses: actions/checkout@v3
 
     - name: Setup Node.js
@@ -24,11 +24,21 @@ jobs:
         node-version: 18
         cache: npm
 
-    - name: Install dependencies
+    - name: Install Dependencies
       run: npm ci
 
     - name: Build
       run: npm run build
+      env:
+        TYPESENSE_HOST: ${{ secrets.TYPESENSE_HOST }}
+        TYPESENSE_PORT: 443
+        TYPESENSE_PROTOCOL: https
+        TYPESENSE_SEARCH_API_KEY: ${{ secrets.TYPESENSE_SEARCH_API_KEY }}
+
+    - name: Write Deployment Marker
+      if: github.ref == 'refs/heads/master'
+      run: |
+        printf '{"deploymentId":"%s"}\n' '${{ github.run_id }}' > build/deployment.json
 
     - name: Publish to Cloudflare Pages
       id: cloudflare-pages
@@ -39,7 +49,31 @@ jobs:
         projectName: topper-docs
         directory: build
 
-    - name: Add comment
+    - name: Wait for Deployment
+      if: github.ref == 'refs/heads/master'
+      run: |
+        for attempt in $(seq 1 30); do
+          if curl -fsS "https://docs.topperpay.com/deployment.json?run=${{ github.run_id }}&attempt=$attempt" | grep -F '"deploymentId":"${{ github.run_id }}"' > /dev/null; then
+            exit 0
+          fi
+
+          echo "Site not updated yet, retrying ($attempt/30)."
+          sleep 10
+        done
+
+        echo "Timed out waiting for https://docs.topperpay.com/deployment.json to serve deploymentId ${{ github.run_id }}."
+        exit 1
+
+    - name: Index Docs in Typesense
+      if: github.ref == 'refs/heads/master'
+      run: npm run index
+      env:
+        TYPESENSE_API_KEY: ${{ secrets.TYPESENSE_API_KEY }}
+        TYPESENSE_HOST: ${{ secrets.TYPESENSE_HOST }}
+        TYPESENSE_PORT: 443
+        TYPESENSE_PROTOCOL: https
+
+    - name: Add Comment
       uses: mshick/add-pr-comment@v2
       with:
         message: |
@@ -48,5 +82,5 @@ jobs:
           |  Name | Link |
           |------ | ---- |
           | <span aria-hidden="true">🔨</span> Commit SHA | ${{ github.sha }} |
-          | <span aria-hidden="true">🔍</span> Deploy log | ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} |
+          | <span aria-hidden="true">🔍</span> Deploy Log | ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} |
           | <span aria-hidden="true">🚀</span> Preview URL | [${{ steps.cloudflare-pages.outputs.url }}](${{ steps.cloudflare-pages.outputs.url }}) |
