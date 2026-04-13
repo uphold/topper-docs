@@ -11,6 +11,7 @@ import TabItem from '@theme/TabItem';
 | - | - |
 | [`order:crypto-onramp:committed`](#ordercrypto-onrampcommitted) | User placed an order. |
 | [`order:crypto-onramp:charged`](#ordercrypto-onrampcharged) | User has been charged for their order. |
+| [`order:crypto-onramp:crypto-sent`](#ordercrypto-onrampcrypto-sent) | User's crypto delivery has started. |
 | [`order:crypto-onramp:completed`](#ordercrypto-onrampcompleted) | User's order has completed. |
 | [`order:crypto-onramp:failed`](#ordercrypto-onrampfailed) | User's order has failed. |
 | [`order:crypto-onramp:refund:completed`](#ordercrypto-onramprefundcompleted) | User's order has been successfully refunded. |
@@ -185,6 +186,116 @@ The values for `origin.paymentMethod.type` can be found using our [REST API](../
       "amount": "0.047116964221968237",
       "rate": "0.00056488387749632223",
       "asset": "ETH",
+      "network": "ethereum",
+      "address": "0xb794F5eA0ba39494cE839613fffBA74279579268"
+    },
+    "fees": [
+      {
+        "amount": "14.17",
+        "asset": "USD",
+        "normalized": "14.17",
+        "type": "network"
+      },
+      {
+        "amount": "2.42",
+        "asset": "USD",
+        "normalized": "2.42",
+        "type": "deposit"
+      },
+      {
+        "amount": "1.00",
+        "asset": "USD",
+        "normalized": "1.00",
+        "type": "partner"
+      }
+    ],
+    "widget": {
+      "id": "998544f2-5b01-4062-9394-22827ff5db6c",
+      "name": "ACME",
+      "flow": "crypto_onramp"
+    }
+    // highlight-end
+  }
+}
+```
+
+  </TabItem>
+</Tabs>
+
+## `order:crypto-onramp:crypto-sent`
+
+Triggered when a user's crypto delivery has started and is in progress.
+
+<Tabs>
+  <TabItem label="Schema" value="schema" default>
+
+- `id`: UUID of the order.
+- `status`: Status of the order (`processing`).
+- `createdAt`: Timestamp at which the order was created.
+- `updatedAt`: Timestamp at which the order was last updated.
+- `origin`: Object containing information about how the user paid.
+  - `amount`: Amount the user paid.
+  - `rate`: Rate used to calculate the amount.
+  - `asset`: Currency code in the [ISO 4217](https://www.iso.org/iso-4217-currency-codes.html) format used to make the payment.
+  - `paymentMethod`: Object containing information about the payment method used.
+    - `type`: Type of payment method.
+- `destination`: Object containing information about what the user will receive.
+  - `amount`: Amount the user will receive.
+  - `rate`: Rate used to calculate the amount.
+  - `asset`: Cryptoasset the user will receive.
+  - `network`: Network of the receiving asset.
+  - `address`: Recipient wallet address.
+  - `tag` (_optional_): Tag of the crypto transaction, used to complement the `address`.
+    - `type`: Tag type (e.g.: `memo` or `destination-tag`).
+    - `value`: Tag value.
+  - `priority` (_optional_): Priority of the crypto transaction.
+  - `ledger` (_optional_): Object containing information about the transaction on the ledger.
+    - `txid`: Transaction ID on the ledger.
+    - `url`: URL to view the transaction details on a blockchain explorer.
+- `fees`: Array containing fees associated with the order.
+  - `amount`: Amount user was charged for this fee.
+  - `asset`: Asset used to charge the fee.
+  - `normalized`: Amount in USD that the user was charged for this fee.
+  - `type`: Type of fee (`network`, `deposit` or `partner`).
+- `widget`: Widget associated with the session.
+  - `id` UUID of the widget.
+  - `name`: Name of the widget.
+  - `flow`: Flow associated with the widget.
+
+:::note
+The values for `origin.paymentMethod.type` can be found using our [REST API](../rest-api.md), via the [payment methods endpoint](https://api.topperpay.com/payment-methods/crypto-onramp).
+:::
+
+</TabItem>
+  <TabItem label="Example" value="example">
+
+```js
+{
+  "name": "order:crypto-onramp:crypto-sent",
+  "id": "00a991cf-a870-43af-88b8-43c51532831d",
+  "bootstrapTokenId": "141bfa06-481e-4684-96eb-cec4ad529616",
+  "data": {
+    // highlight-start
+    "id": "966b8e24-6a65-442a-942e-577f16288789",
+    "status": "processing",
+    "createdAt": "2023-06-12T17:21:21.240Z",
+    "updatedAt": "2023-06-12T17:21:21.240Z",
+    "origin": {
+      "amount": "100.00",
+      "rate": "1770.27534301775263314892",
+      "asset": "USD",
+      "paymentMethod": {
+        "type": "credit-card"
+      }
+    },
+    "destination": {
+      "amount": "0.047116964221968237",
+      "rate": "0.00056488387749632223",
+      "asset": "ETH",
+      "ledger": {
+        "txid": "0xdfa1ea4ddb841af466a5ca78c6e1f0edfaef5e54e79a28238d2a5bb2da4f1911",
+        "url": "https://etherscan.io/tx/0xdfa1ea4ddb841af466a5ca78c6e1f0edfaef5e54e79a28238d2a5bb2da4f1911"
+      },
       "network": "ethereum",
       "address": "0xb794F5eA0ba39494cE839613fffBA74279579268"
     },
