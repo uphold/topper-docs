@@ -10,27 +10,35 @@
   "homepage": "https://github.com/uphold/topper-docs",
   "bugs": "https://github.com/uphold/topper-docs/issues",
   "scripts": {
-    "docusaurus": "docusaurus",
-    "start": "docusaurus start",
     "build": "docusaurus build",
-    "swizzle": "docusaurus swizzle",
-    "deploy": "docusaurus deploy",
     "clear": "docusaurus clear",
+    "deploy": "docusaurus deploy",
+    "docusaurus": "docusaurus",
+    "index": "sh -c 'if [ -f .env.typesense ]; then set -a; . ./.env.typesense; set +a; fi; docker run -i -e TYPESENSE_API_KEY -e TYPESENSE_HOST -e TYPESENSE_PORT -e TYPESENSE_PROTOCOL -e \"CONFIG=$(cat typesense-docsearch-config.json | jq -r tostring)\" typesense/docsearch-scraper:0.12.0'",
+    "index:local": "sh -c 'if [ -f .env.typesense ]; then set -a; . ./.env.typesense; set +a; fi; docker run -i --add-host=host.docker.internal:host-gateway --add-host=docs.topperpay.com:host-gateway -e TYPESENSE_API_KEY -e TYPESENSE_HOST -e TYPESENSE_PORT -e TYPESENSE_PROTOCOL -e \"CONFIG=$(cat typesense-docsearch-config.local.json | jq -r tostring)\" typesense/docsearch-scraper:0.12.0'",
+    "serve:index:local": "TOPPER_DOCS_URL=http://docs.topperpay.com npm run build && sudo npm run serve -- --port 80",
     "serve": "docusaurus serve",
-    "write-translations": "docusaurus write-translations",
-    "write-heading-ids": "docusaurus write-heading-ids"
+    "start": "docusaurus start",
+    "swizzle": "docusaurus swizzle",
+    "typesense:start": "docker run -p 8108:8108 -v $(pwd)/typesense-data:/data typesense/typesense:30.1 --data-dir /data --api-key=$(grep TYPESENSE_API_KEY .env.typesense | cut -d= -f2) --enable-cors",
+    "write-heading-ids": "docusaurus write-heading-ids",
+    "write-translations": "docusaurus write-translations"
   },
   "dependencies": {
-    "@docusaurus/core": "^3.1.1",
-    "@docusaurus/preset-classic": "^3.1.1",
+    "@docusaurus/core": "3.6.0",
+    "@docusaurus/preset-classic": "3.6.0",
     "@mdx-js/react": "^3.0.1",
     "clsx": "^1.2.1",
+    "docusaurus-theme-search-typesense": "0.23.0",
     "prism-react-renderer": "^2.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "^3.1.1"
+    "@docusaurus/module-type-aliases": "3.6.0"
+  },
+  "overrides": {
+    "sax": "1.4.1"
   },
   "browserslist": {
     "production": [
