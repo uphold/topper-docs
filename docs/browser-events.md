@@ -21,3 +21,19 @@ topper.on(TOPPER_EVENTS.ORDER_PLACED, ({ data }) => {});
 // Listen to all events.
 topper.on(TOPPER_EVENTS.ALL, ({ data, name }) => {});
 ```
+
+Without using the [Web SDK](./web-sdk.md) you can listen to events like:
+
+```js
+window.addEventListener('message', handleMessageFn);
+```
+
+or on React Native using `react-native-webview`: 
+
+```js
+<WebView onMessage={handleMessageFn} />
+```
+
+Event names and payloads are exposed through `event.data` in a web browser and `event.nativeEvent.data` in React Native.
+
+See the full list of events [here](https://github.com/uphold/topper-web-sdk/blob/master/src/enums/events.ts).
