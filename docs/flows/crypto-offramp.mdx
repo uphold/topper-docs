@@ -14,6 +14,7 @@ The crypto off-ramp flow allows a user to sell cryptocurrency and convert it int
 <Tabs>
   <TabItem label="Schema" value="schema" default>
 
+- `campaignIds` (_optional_): Public campaigns to be added to the widget session, it overrides any private campaign that would be applied to the session. Only one id can be provided for now. If they cannot be attributed to the session they will be silently ignored.
 - `partner` (_optional_): Partner object.
   - `continueUrl` (_optional_): URL to redirect the user to after the order is placed and the funds were received.
   - `continueUrlTarget` (_optional_): In which tab should the `continueUrl` be opened.
@@ -90,6 +91,7 @@ We recommend that you use `XRP` for testing purposes when integrating Topper sin
   "jti": "4b552af1-1592-42f8-bbc9-dac28e2b4000",
   "sub": "b9fe022b-f436-49e1-bb89-6f2e8eabf336",
   // highlight-start
+  "campaignIds": ["7c757c81-39dc-4e42-8c06-3ebafc579d0d"],
   "partner": {
     "continueUrl": "https://example.com",
     "continueUrlTarget": "new-tab",
