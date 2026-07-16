@@ -11,7 +11,11 @@ import TabItem from '@theme/TabItem';
 
 For each widget you have configured, you may configure a number of webhooks. When there are updates to one of your user's Topper sessions, we will make a HTTP `POST` request to your configured URL to provide further information.
 
-During the onboarding process you may provide us with webhook URLs, and the events you wish to receive for each one. We will then provide you with a public key for each URL, which you can use to securely verify the request was sent by Topper.
+Webhooks can be configured through the [Enterprise Portal](https://portal.enterprise.uphold.com/). Navigate to the Topper product, select the widget, and open the Webhooks tab. From there, you can create webhooks and choose the events you wish to receive for each one.
+
+For every webhook, a corresponding public key is generated and made available to you. This key can be used to securely verify that incoming webhook requests were sent by Topper.
+
+Account managers are available to assist with the configuration process if needed.
 
 A webhook request will include the following data:
 
