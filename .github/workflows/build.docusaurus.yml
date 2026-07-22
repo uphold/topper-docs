@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-8g-4cpu-arm64
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
